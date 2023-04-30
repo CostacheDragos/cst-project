@@ -1,0 +1,63 @@
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+import { CredentialsValidators } from '../../helpers/credentials-validators';
+
+@Component({
+  selector: 'app-register-page',
+  templateUrl: './register-page.component.html',
+  styleUrls: ['./register-page.component.scss']
+})
+export class RegisterPageComponent implements OnInit {
+
+  registerForm!: FormGroup;
+
+  constructor(private authenticationService: AuthenticationService, private router: Router) { }
+
+  ngOnInit(): void {
+    this.initializeForm();
+  }
+
+  initializeForm() {
+    this.registerForm = new FormGroup({
+      email: new FormControl<string>('', [Validators.required, CredentialsValidators.emailValidator]),
+      password: new FormControl<string>('', [Validators.required]),
+      confirmPassword: new FormControl<string>('', [Validators.required]),
+      firstName: new FormControl<string>('', [Validators.required]),
+      lastName: new FormControl<string>('', [Validators.required]),
+    }, {
+      validators: CredentialsValidators.passwordConfirmationValidator()
+    });
+  }
+
+  submitForm() {
+    const credentials = {
+      email: this.registerForm.value.email,
+      password: this.registerForm.value.password,
+      firstName: this.registerForm.value.firstName,
+      lastName: this.registerForm.value.lastName,
+    }
+    this.authenticationService.register(credentials);
+  }
+
+  navigateToLogin() {
+    this.router.navigate(['/login']);
+  }
+
+  get email(): FormControl {
+    return this.registerForm.get('email') as FormControl;
+  }
+  get password(): FormControl {
+    return this.registerForm.get('password') as FormControl;
+  }
+  get confirmPassword(): FormControl {
+    return this.registerForm.get('confirmPassword') as FormControl;
+  }
+  get firstName(): FormControl {
+    return this.registerForm.get('firstName') as FormControl;
+  }
+  get lastName(): FormControl {
+    return this.registerForm.get('lastName') as FormControl;
+  }
+}

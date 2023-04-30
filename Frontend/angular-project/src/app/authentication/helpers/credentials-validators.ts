@@ -1,4 +1,4 @@
-import { FormControl, ValidationErrors } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 export class CredentialsValidators {
   public static emailValidator(email: FormControl): ValidationErrors | null {
@@ -11,4 +11,14 @@ export class CredentialsValidators {
 
     return null;
   }
+
+  public static passwordConfirmationValidator(
+  ): ValidatorFn {
+    return (group: AbstractControl): ValidationErrors | null => {
+      const passwordValue = group.get('password')?.value;
+      const confirmPasswordValue = group.get('confirmPassword')?.value;
+      return (confirmPasswordValue === '' || passwordValue === confirmPasswordValue) ? null : { passwordMismatch: true };
+    };
+  }
 }
+
