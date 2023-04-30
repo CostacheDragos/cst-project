@@ -28,7 +28,6 @@ export class LoginPageComponent implements OnInit {
   }
 
   submitForm() {
-    console.log("submited");
     const credentials = {
       email: this.loginForm.value.email,
       password: this.loginForm.value.password,
