@@ -36,9 +36,9 @@
         <div class="additional-options-container">
             <div class="remember-me-container">
                 <label for="remember-me">Remember me</label>
-                <input type="checkbox" name="remember-me" id="remember-me">
+                <input type="checkbox" name="remember-me" id="remember-me" formControlName="rememberMe">
             </div>
-            <a class="register-navigator">Register now!</a>
+            <a class="register-navigator" (click)="navigateToRegister()">Register now!</a>
         </div>
     </form>
 </div>

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
@@ -11,7 +12,7 @@ export class LoginPageComponent implements OnInit {
 
   loginForm!: FormGroup;
 
-  constructor(private authenticationService: AuthenticationService) { }
+  constructor(private authenticationService: AuthenticationService, private router: Router) { }
 
   ngOnInit(): void {
     this.initializeForm();
@@ -21,6 +22,7 @@ export class LoginPageComponent implements OnInit {
     this.loginForm = new FormGroup({
       email: new FormControl<string>('', [Validators.required]),
       password: new FormControl<string>('', [Validators.required]),
+      rememberMe: new FormControl<boolean>(false),
     });
   }
 
@@ -30,7 +32,14 @@ export class LoginPageComponent implements OnInit {
       email: this.loginForm.value.email,
       password: this.loginForm.value.password,
     }
-    this.authenticationService.login(credentials)
+    this.authenticationService.login(credentials);
+
+    if(this.loginForm.value.rememberMe && this.authenticationService.user)
+      localStorage.setItem("RememberedUser", JSON.stringify(this.authenticationService.user));
+  }
+
+  navigateToRegister() {
+    this.router.navigate(['/register']);
   }
 
   get email(): FormControl {
