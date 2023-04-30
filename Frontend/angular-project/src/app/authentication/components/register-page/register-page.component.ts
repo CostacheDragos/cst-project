@@ -26,6 +26,8 @@ export class RegisterPageComponent implements OnInit {
       confirmPassword: new FormControl<string>('', [Validators.required]),
       firstName: new FormControl<string>('', [Validators.required]),
       lastName: new FormControl<string>('', [Validators.required]),
+    }, {
+      validators: CredentialsValidators.passwordConfirmationValidator()
     });
   }
 

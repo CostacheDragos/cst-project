@@ -49,6 +49,9 @@
                 <div class="red-text" *ngIf="confirmPassword?.touched && confirmPassword?.errors?.['required']">
                     Password confirmation is required!
                 </div>
+                <div class="red-text" *ngIf="confirmPassword?.touched && registerForm?.errors?.['passwordMismatch']">
+                    Passwords do not match!
+                </div>
             </nz-form-control>
         </nz-form-item>
         <div class="name-input-container">
