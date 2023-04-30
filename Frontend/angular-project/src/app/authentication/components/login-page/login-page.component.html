@@ -35,7 +35,7 @@
                 </div>
             </nz-form-control>
         </nz-form-item>
-        <button nz-button class="login-form-button" [nzType]="'primary'">Log in</button>
+        <button nz-button class="login-form-button" [nzType]="'primary'" [disabled]="!loginForm.valid">Log in</button>
         <div class="additional-options-container">
             <div class="remember-me-container">
                 <label for="remember-me">Remember me</label>
