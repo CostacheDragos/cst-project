@@ -14,6 +14,9 @@
                 <div class="red-text" *ngIf="email?.touched && email?.errors?.['required']">
                     Email is required!
                 </div>
+                <div class="red-text" *ngIf="email?.touched && email?.errors?.['invalidEmail'] && !email?.errors?.['required']">
+                    Invalid email format!
+                </div>
             </nz-form-control>
         </nz-form-item>
         <nz-form-item>

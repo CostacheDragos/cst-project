@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { CredentialsValidators } from '../../helpers/credentials-validators';
 
 @Component({
   selector: 'app-login-page',
@@ -20,7 +21,7 @@ export class LoginPageComponent implements OnInit {
 
   initializeForm() {
     this.loginForm = new FormGroup({
-      email: new FormControl<string>('', [Validators.required]),
+      email: new FormControl<string>('', [Validators.required, CredentialsValidators.emailValidator]),
       password: new FormControl<string>('', [Validators.required]),
       rememberMe: new FormControl<boolean>(false),
     });
