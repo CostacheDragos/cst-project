@@ -35,8 +35,10 @@ export class RegisterPageComponent implements OnInit {
     const credentials = {
       email: this.registerForm.value.email,
       password: this.registerForm.value.password,
+      firstName: this.registerForm.value.firstName,
+      lastName: this.registerForm.value.lastName,
     }
-    //this.authenticationService.login(credentials);
+    this.authenticationService.register(credentials);
   }
 
   navigateToLogin() {
