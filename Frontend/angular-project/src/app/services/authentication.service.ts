@@ -36,4 +36,7 @@ export class AuthenticationService {
   get user(): User {
     return this.currentUser;
   }
+  get isAuthenticated() : boolean {
+    return this.currentUser ? true : false;
+  }
 }

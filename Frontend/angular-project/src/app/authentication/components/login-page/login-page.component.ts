@@ -35,7 +35,7 @@ export class LoginPageComponent implements OnInit {
     this.authenticationService.login(credentials);
 
     // If the user has logged in successfully, redirect to the main page
-    if(this.authenticationService.user) {
+    if(this.authenticationService.isAuthenticated) {
       // If the rememberMe option is checked, store user credentials in local storage
       if(this.loginForm.value.rememberMe)
         localStorage.setItem("RememberedUser", JSON.stringify(this.authenticationService.user));

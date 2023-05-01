@@ -41,7 +41,7 @@ export class RegisterPageComponent implements OnInit {
     this.authenticationService.register(credentials);
 
     // If the user has registered successfully, redirect to the main page
-    if(this.authenticationService.user) {
+    if(this.authenticationService.isAuthenticated) {
       this.navigateToMain();
     }
   }
