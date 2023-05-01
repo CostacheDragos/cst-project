@@ -13,7 +13,12 @@ export class RegisterPageComponent implements OnInit {
 
   registerForm!: FormGroup;
 
-  constructor(private authenticationService: AuthenticationService, private router: Router) { }
+  constructor(private authenticationService: AuthenticationService, private router: Router) { 
+    if(this.authenticationService.isAuthenticated) {
+      this.navigateToMain();
+      return;
+    }
+  }
 
   ngOnInit(): void {
     this.initializeForm();
