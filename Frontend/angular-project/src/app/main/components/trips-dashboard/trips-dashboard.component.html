@@ -1,0 +1,43 @@
+<button nz-button nzType="primary" class="addTripButton">Add trip</button>
+<div class="pagination-content">
+  <div class="actionButtons">
+    <a
+      class="sortByButton"
+      nz-dropdown
+      [nzDropdownMenu]="menu"
+      [nzClickHide]="false"
+      [(nzVisible)]="visible"
+    >
+      Sort by
+      <span nz-icon nzType="down"></span>
+    </a>
+    <nz-dropdown-menu #menu="nzDropdownMenu">
+      <ul nz-menu>
+        <li nz-menu-item (click)="sortByCityAscending()">City ascending</li>
+      </ul>
+    </nz-dropdown-menu>
+    <div class="prevNextButtons">
+      <button
+        nz-button
+        nzType="primary"
+        class="pagination-button"
+        (click)="previous()"
+      >
+        ❮
+      </button>
+      <button
+        nz-button
+        nzType="primary"
+        class="pagination-button"
+        (click)="next()"
+      >
+        ❯
+      </button>
+    </div>
+  </div>
+  <div class="trips-list">
+    <div *ngFor="let elem of currentPageTrips">
+      <app-trip-card [trip]="elem"></app-trip-card>
+    </div>
+  </div>
+</div>

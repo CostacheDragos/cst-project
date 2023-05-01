@@ -1,0 +1,26 @@
+<div class="card-content">
+  <h3 class="city">{{ trip.city }}</h3>
+  <p class="country">
+    <span nz-icon nzType="flag" nzTheme="outline"></span> {{ trip.country }}
+  </p>
+  <p class="date">
+    <span nz-icon nzType="calendar" nzTheme="outline"></span> {{ trip.date }}
+  </p>
+  <p class="date">
+    <span nz-icon nzType="dollar" nzTheme="outline"></span> {{ trip.spending }}
+  </p>
+  <p class="rating">
+    <span nz-icon nzType="star" nzTheme="outline"></span> {{ trip.rating }}
+  </p>
+  <div class="button-row">
+    <button nz-button nzType="primary" class="detailsButton">
+      View details
+    </button>
+    <button nz-button nzType="default" class="editButton" nzTheme="outline">
+      <span nz-icon nzType="edit"></span>
+    </button>
+    <button nz-button nzType="default" class="deleteButton" nzTheme="outline">
+      <span nz-icon nzType="delete"></span>
+    </button>
+  </div>
+</div>
