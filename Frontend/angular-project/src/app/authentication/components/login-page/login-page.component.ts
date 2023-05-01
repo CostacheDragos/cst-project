@@ -13,7 +13,12 @@ export class LoginPageComponent implements OnInit {
 
   loginForm!: FormGroup;
 
-  constructor(private authenticationService: AuthenticationService, private router: Router) { }
+  constructor(private authenticationService: AuthenticationService, private router: Router) {
+    if(this.authenticationService.isAuthenticated) {
+      this.navigateToMain();
+      return;
+    }
+  }
 
   ngOnInit(): void {
     this.initializeForm();
@@ -34,12 +39,22 @@ export class LoginPageComponent implements OnInit {
     }
     this.authenticationService.login(credentials);
 
-    if(this.loginForm.value.rememberMe && this.authenticationService.user)
-      localStorage.setItem("RememberedUser", JSON.stringify(this.authenticationService.user));
+    // If the user has logged in successfully, redirect to the main page
+    if(this.authenticationService.isAuthenticated) {
+      // If the rememberMe option is checked, store user credentials in local storage
+      if(this.loginForm.value.rememberMe)
+        localStorage.setItem("RememberedUser", JSON.stringify(this.authenticationService.user));
+
+      this.navigateToMain();
+    }
   }
 
   navigateToRegister() {
     this.router.navigate(['/register']);
+  }
+
+  navigateToMain() {
+    this.router.navigate(['/main']);
   }
 
   get email(): FormControl {

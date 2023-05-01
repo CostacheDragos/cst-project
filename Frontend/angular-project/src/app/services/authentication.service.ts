@@ -9,7 +9,12 @@ export class AuthenticationService {
 
   private currentUser!: User;
 
-  constructor() { }
+  constructor() { 
+    // Check for stored credentials
+    const storedData = localStorage.getItem("RememberedUser");
+    if(storedData)
+      this.currentUser = JSON.parse(storedData);
+  }
 
   login(credentials: LoginCredentials) {
     if(credentials.email === 'test@test.com' && credentials.password === 'password'){
@@ -35,5 +40,8 @@ export class AuthenticationService {
 
   get user(): User {
     return this.currentUser;
+  }
+  get isAuthenticated() : boolean {
+    return this.currentUser ? true : false;
   }
 }
