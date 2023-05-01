@@ -13,7 +13,44 @@
     </a>
     <nz-dropdown-menu #menu="nzDropdownMenu">
       <ul nz-menu>
-        <li nz-menu-item (click)="sortByCityAscending()">City ascending</li>
+        <li nz-submenu nzTitle="City">
+          <ul>
+            <li nz-menu-item (click)="sortByCityAscending()">Ascending</li>
+            <li nz-menu-item (click)="sortByCityDescending()">Descending</li>
+          </ul>
+        </li>
+        <li nz-submenu nzTitle="Country">
+          <ul>
+            <li nz-menu-item (click)="sortByCountryAscending()">Ascending</li>
+            <li nz-menu-item (click)="sortByCountryDescending()">Descending</li>
+          </ul>
+        </li>
+        <li nz-submenu nzTitle="Date">
+          <ul>
+            <li nz-menu-item (click)="sortByDateDescending()">Most recent</li>
+            <li nz-menu-item (click)="sortByDateAscending()">Oldest first</li>
+          </ul>
+        </li>
+        <li nz-submenu nzTitle="Spending">
+          <ul>
+            <li nz-menu-item (click)="sortBySpendingDescending()">
+              Most expensive
+            </li>
+            <li nz-menu-item (click)="sortBySpendingAscending()">
+              Least expensive
+            </li>
+          </ul>
+        </li>
+        <li nz-submenu nzTitle="Rating">
+          <ul>
+            <li nz-menu-item (click)="sortByRatingDescending()">
+              Most appreciated
+            </li>
+            <li nz-menu-item (click)="sortByRatingAscending()">
+              Least appreciated
+            </li>
+          </ul>
+        </li>
       </ul>
     </nz-dropdown-menu>
     <div class="prevNextButtons">
@@ -35,8 +72,24 @@
       </button>
     </div>
   </div>
+  <div class="search-bar">
+    <nz-input-group [nzSuffix]="suffixIconSearch">
+      <input
+        type="text"
+        name="search"
+        nz-input
+        placeholder="Search for a trip by any field value from card"
+        autocomplete="off"
+        [(ngModel)]="searchText"
+      />
+    </nz-input-group>
+    <ng-template #suffixIconSearch>
+      <span nz-icon nzType="search"></span>
+    </ng-template>
+  </div>
   <div class="trips-list">
-    <div *ngFor="let elem of currentPageTrips">
+    <!--* This is not a normal pipe, is used for searching (Ng2SearchPipeModule)-->
+    <div *ngFor="let elem of currentPageTrips | filter : searchText">
       <app-trip-card [trip]="elem"></app-trip-card>
     </div>
   </div>
