@@ -65,6 +65,13 @@
       background-color: #28313b;
       color: white;
       text-align: center;
+
+      /* Custom styles for the submenu component */
+      .submenu {
+        background-color: #c21d1d; /* Set the background color to white */
+        border-color: #cccccc; /* Set the border color to a light gray */
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add a box shadow for depth */
+      }
     }
   }
 }

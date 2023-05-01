@@ -13,7 +13,44 @@
     </a>
     <nz-dropdown-menu #menu="nzDropdownMenu">
       <ul nz-menu>
-        <li nz-menu-item (click)="sortByCityAscending()">City ascending</li>
+        <li nz-submenu nzTitle="City">
+          <ul>
+            <li nz-menu-item (click)="sortByCityAscending()">Ascending</li>
+            <li nz-menu-item (click)="sortByCityDescending()">Descending</li>
+          </ul>
+        </li>
+        <li nz-submenu nzTitle="Country">
+          <ul>
+            <li nz-menu-item (click)="sortByCountryAscending()">Ascending</li>
+            <li nz-menu-item (click)="sortByCountryDescending()">Descending</li>
+          </ul>
+        </li>
+        <li nz-submenu nzTitle="Date">
+          <ul>
+            <li nz-menu-item (click)="sortByDateDescending()">Most recent</li>
+            <li nz-menu-item (click)="sortByDateAscending()">Oldest first</li>
+          </ul>
+        </li>
+        <li nz-submenu nzTitle="Spending">
+          <ul>
+            <li nz-menu-item (click)="sortBySpendingDescending()">
+              Most expansive
+            </li>
+            <li nz-menu-item (click)="sortBySpendingAscending()">
+              Least expansive
+            </li>
+          </ul>
+        </li>
+        <li nz-submenu nzTitle="Rating">
+          <ul>
+            <li nz-menu-item (click)="sortByRatingDescending()">
+              Most appreciated
+            </li>
+            <li nz-menu-item (click)="sortByRatingAscending()">
+              Least appreciated
+            </li>
+          </ul>
+        </li>
       </ul>
     </nz-dropdown-menu>
     <div class="prevNextButtons">
