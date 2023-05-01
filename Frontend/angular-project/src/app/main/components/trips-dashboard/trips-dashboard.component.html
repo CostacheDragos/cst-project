@@ -90,7 +90,8 @@
   <div class="trips-list">
     <!--* This is not a normal pipe, is used for searching (Ng2SearchPipeModule)-->
     <div *ngFor="let elem of currentPageTrips | filter : searchText">
-      <app-trip-card [trip]="elem"></app-trip-card>
+      <app-trip-card [trip]="elem"
+      (emitDeleteTripId)="deleteTrip($event)"></app-trip-card>
     </div>
   </div>
 </div>

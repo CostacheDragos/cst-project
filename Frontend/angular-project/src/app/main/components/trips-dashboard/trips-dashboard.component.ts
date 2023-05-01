@@ -25,7 +25,8 @@ export class TripsDashboardComponent {
     );
   }
 
-  //Pagination methods
+  //******************************* Pagination methods **********************************
+  //////////////////////////////////////////////////////////////////////////////////////
   previous() {
     if (this.startIndex - this.pageLength < 0) {
       return;
@@ -55,8 +56,10 @@ export class TripsDashboardComponent {
       lastCityIndexOfCurrentPage
     );
   }
+  //////////////////////////////////////////////////////////////////////////////////////
 
-  //Sorting methods
+  //******************************* Sorting methods ************************************
+  //////////////////////////////////////////////////////////////////////////////////////
   sortByCityAscending() {
     this.listOfTrips.sort((a, b) => a.city.localeCompare(b.city));
     this.currentPageTrips = this.listOfTrips.slice(
@@ -154,4 +157,19 @@ export class TripsDashboardComponent {
     );
     this.visible = false;
   }
+  //////////////////////////////////////////////////////////////////////////////////////
+
+  //************************** Trip manipulation methods *******************************
+  //this method is called when user deletes a trip in order to delete it from UI
+  deleteTrip(id: string) {
+    this.listOfTrips.splice(
+      this.listOfTrips.findIndex((item) => item.tripID === id),
+      1
+    );
+    this.currentPageTrips = this.listOfTrips.slice(
+      this.startIndex,
+      this.pageLength
+    );
+  }
+  //////////////////////////////////////////////////////////////////////////////////////
 }

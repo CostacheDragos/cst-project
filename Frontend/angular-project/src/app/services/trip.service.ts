@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
+import { TripListing } from '../main/interfaces/trip-listing.interface';
 @Injectable({
   providedIn: 'root',
 })
 export class TripService {
+  listOfTrips!: TripListing[]
   constructor() {}
 
   //TODO fetch data from backend
   getListOfListingTrips() {
-    return [
+    this.listOfTrips= [
       {
         userID: '1',
         tripID: '1',
@@ -108,5 +110,12 @@ export class TripService {
         rating: 4.5,
       },
     ];
+
+    return this.listOfTrips;
+  }
+
+  deleteTrip(tripId: string) {
+    //TODO delete trip from backend
+    console.log('Trip with id ' + tripId + ' has been deleted');
   }
 }
