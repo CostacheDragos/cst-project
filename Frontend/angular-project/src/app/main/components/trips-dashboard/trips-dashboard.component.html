@@ -34,10 +34,10 @@
         <li nz-submenu nzTitle="Spending">
           <ul>
             <li nz-menu-item (click)="sortBySpendingDescending()">
-              Most expansive
+              Most expensive
             </li>
             <li nz-menu-item (click)="sortBySpendingAscending()">
-              Least expansive
+              Least expensive
             </li>
           </ul>
         </li>
@@ -72,8 +72,24 @@
       </button>
     </div>
   </div>
+  <div class="search-bar">
+    <nz-input-group [nzSuffix]="suffixIconSearch">
+      <input
+        type="text"
+        name="search"
+        nz-input
+        placeholder="Search for a trip by any field value from card"
+        autocomplete="off"
+        [(ngModel)]="searchText"
+      />
+    </nz-input-group>
+    <ng-template #suffixIconSearch>
+      <span nz-icon nzType="search"></span>
+    </ng-template>
+  </div>
   <div class="trips-list">
-    <div *ngFor="let elem of currentPageTrips">
+    <!--* This is not a normal pipe, is used for searching (Ng2SearchPipeModule)-->
+    <div *ngFor="let elem of currentPageTrips | filter : searchText">
       <app-trip-card [trip]="elem"></app-trip-card>
     </div>
   </div>

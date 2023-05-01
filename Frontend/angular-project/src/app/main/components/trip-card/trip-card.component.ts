@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Trip } from 'src/app/interfaces/trip.interface';
+import { TripListing } from '../../interfaces/trip-listing.interface';
 
 @Component({
   selector: 'app-trip-card',
@@ -8,5 +8,5 @@ import { Trip } from 'src/app/interfaces/trip.interface';
 })
 export class TripCardComponent {
   @Input()
-  trip!: Trip;
+  trip!: TripListing;
 }
