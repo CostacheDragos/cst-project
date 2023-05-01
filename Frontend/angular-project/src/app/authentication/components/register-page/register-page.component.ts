@@ -39,10 +39,19 @@ export class RegisterPageComponent implements OnInit {
       lastName: this.registerForm.value.lastName,
     }
     this.authenticationService.register(credentials);
+
+    // If the user has registered successfully, redirect to the main page
+    if(this.authenticationService.user) {
+      this.navigateToMain();
+    }
   }
 
   navigateToLogin() {
     this.router.navigate(['/login']);
+  }
+
+  navigateToMain() {
+    this.router.navigate(['/main']);
   }
 
   get email(): FormControl {
