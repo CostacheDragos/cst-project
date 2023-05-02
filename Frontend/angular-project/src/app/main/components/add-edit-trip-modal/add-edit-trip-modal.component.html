@@ -1,0 +1,113 @@
+<nz-modal
+  [(nzVisible)]="isVisible"
+  (nzOnOk)="onOk()"
+  (nzOnCancel)="onCancel()"
+  [nzOkDisabled]="!tripEditForm.valid"
+>
+  <ng-container *nzModalContent>
+    <form nz-form [formGroup]="tripEditForm">
+      <nz-form-item>
+        <nz-form-control>
+          <nz-input-group>
+            <label>City name</label>
+            <input
+              readonly="isReadOnly"
+              type="text"
+              nz-input
+              formControlName="city"
+              placeholder="City"
+            />
+          </nz-input-group>
+          <div class="red-text" *ngIf="city?.errors?.['required']">
+            City is required!
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <nz-input-group>
+            <label>Country name</label>
+            <input
+              readonly="isReadOnly"
+              type="text"
+              nz-input
+              formControlName="country"
+              placeholder="Country"
+            />
+          </nz-input-group>
+          <div class="red-text" *ngIf="country?.errors?.['required']">
+            Country is required!
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <nz-input-group>
+            <label>Trip date</label>
+            <input
+              readonly="isReadOnly"
+              type="text"
+              nz-input
+              formControlName="date"
+              placeholder="dd/mm/yyy"
+            />
+          </nz-input-group>
+          <div class="red-text" *ngIf="date?.errors?.['required']">
+            Date is required!
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <nz-input-group>
+            <label>Spending</label>
+            <input
+              readonly="isReadOnly"
+              type="number"
+              nz-input
+              formControlName="spending"
+              placeholder="$"
+            />
+          </nz-input-group>
+          <div class="red-text" *ngIf="spending?.errors?.['required']">
+            Spending is required!
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <nz-input-group>
+            <label>Rating</label>
+            <input
+              readonly="isReadOnly"
+              type="number"
+              nz-input
+              formControlName="rating"
+              placeholder="Rating"
+            />
+          </nz-input-group>
+          <div class="red-text" *ngIf="rating?.errors?.['required']">
+            Rating is required!
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <nz-input-group>
+            <label>Short description</label>
+            <input
+              readonly="isReadOnly"
+              type="text"
+              nz-input
+              formControlName="description"
+              placeholder="Description"
+            />
+          </nz-input-group>
+          <div class="red-text" *ngIf="description?.errors?.['required']">
+            Description is required!
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </ng-container>
+</nz-modal>

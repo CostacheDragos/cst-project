@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { TripListing } from '../../interfaces/trip-listing.interface';
+import { TripService } from 'src/app/services/trip.service';
 
 @Component({
   selector: 'app-trips-dashboard',
@@ -16,7 +17,10 @@ export class TripsDashboardComponent {
   visible = true;
   searchText!: string;
 
-  constructor() {}
+  isViewDetailsModalOpen: boolean = false;
+  isReadOnly: boolean = false;
+
+  constructor(private tripService:TripService) {}
 
   ngOnInit(): void {
     this.currentPageTrips = this.listOfTrips.slice(
@@ -172,4 +176,10 @@ export class TripsDashboardComponent {
     );
   }
   //////////////////////////////////////////////////////////////////////////////////////
+
+  
+  onOpenViewDetailsModal() {
+    this.isViewDetailsModalOpen = true;
+    this.isReadOnly = true;
+  }
 }

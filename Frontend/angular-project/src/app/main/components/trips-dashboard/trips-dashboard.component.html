@@ -87,11 +87,19 @@
       <span nz-icon nzType="search"></span>
     </ng-template>
   </div>
+  <app-add-edit-trip-modal
+    [isVisible]="isViewDetailsModalOpen"
+    [isReadOnly]="isReadOnly"
+    (closeModal)="isViewDetailsModalOpen = false"
+  ></app-add-edit-trip-modal>
   <div class="trips-list">
     <!--* This is not a normal pipe, is used for searching (Ng2SearchPipeModule)-->
     <div *ngFor="let elem of currentPageTrips | filter : searchText">
-      <app-trip-card [trip]="elem"
-      (emitDeleteTripId)="deleteTrip($event)"></app-trip-card>
+      <app-trip-card
+        [tripListing]="elem"
+        (emitDeleteTripId)="deleteTrip($event)"
+        (openViewDetailsModal)="onOpenViewDetailsModal()"
+      ></app-trip-card>
     </div>
   </div>
 </div>

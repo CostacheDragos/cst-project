@@ -16,5 +16,5 @@ export class MainPageComponent {
   }
 
   //fetch list of listing-trips
-  listOfTrips: TripListing[] = this.tripService.getListOfListingTrips();
+  listOfTrips: TripListing[] = this.tripService.getListOfDisplayedTrips();
 }
