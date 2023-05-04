@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { TripService } from 'src/app/services/trip.service';
 import { TripListing } from '../../interfaces/trip-listing.interface';
+import { AuthenticationService } from 'src/app/services/authentication.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-main-page',
@@ -8,11 +10,18 @@ import { TripListing } from '../../interfaces/trip-listing.interface';
   styleUrls: ['./main-page.component.scss'],
 })
 export class MainPageComponent {
-  constructor(private tripService: TripService) {}
+  constructor(
+    private tripService: TripService, 
+    private authenticationService: AuthenticationService,
+    private router: Router
+    ) {}
 
-  //TODO implement logout
   logout() {
-    console.log('Logged out succesfully');
+    // Log the user out
+    this.authenticationService.logout();
+
+    // Take the user back to the login page
+    this.router.navigate(['/login']);
   }
 
   //fetch list of listing-trips
