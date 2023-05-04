@@ -92,7 +92,7 @@
     [isReadOnly]="isReadOnly"
     (closeModal)="isViewDetailsModalOpen = false"
   ></app-add-edit-trip-modal>
-  <div class="trips-list">
+  <div *ngIf="listOfTrips.length !== 0" class="trips-list">
     <!--* This is not a normal pipe, is used for searching (Ng2SearchPipeModule)-->
     <div *ngFor="let elem of currentPageTrips | filter : searchText">
       <app-trip-card
@@ -102,4 +102,7 @@
       ></app-trip-card>
     </div>
   </div>
+  <h1 *ngIf="listOfTrips.length === 0" class="empty-trips-list-warning">
+    No trips available!
+  </h1>
 </div>
