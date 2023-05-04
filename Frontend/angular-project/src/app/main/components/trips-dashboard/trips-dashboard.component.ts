@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { TripListing } from '../../interfaces/trip-listing.interface';
+import { Trip } from 'src/app/interfaces/trip.interface';
 import { TripService } from 'src/app/services/trip.service';
 
 @Component({
@@ -9,9 +9,9 @@ import { TripService } from 'src/app/services/trip.service';
 })
 export class TripsDashboardComponent {
   @Input()
-  listOfTrips!: TripListing[];
+  listOfTrips!: Trip[];
 
-  currentPageTrips!: TripListing[];
+  currentPageTrips!: Trip[];
   currentPageStartIndex: number = 0;
   pageLength: number = 6;
   visible = true;

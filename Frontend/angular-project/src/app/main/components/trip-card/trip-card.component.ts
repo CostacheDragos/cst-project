@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { TripListing } from '../../interfaces/trip-listing.interface';
+
 import { TripService } from 'src/app/services/trip.service';
 import { Trip } from 'src/app/interfaces/trip.interface';
 
@@ -9,9 +9,9 @@ import { Trip } from 'src/app/interfaces/trip.interface';
   styleUrls: ['./trip-card.component.scss'],
 })
 export class TripCardComponent {
-  //is used only by cards, so it doesn't contain all data
+  //is used only by cards, so it doesn't contain description field
   @Input()
-  tripListing!: TripListing;
+  tripListing!: Trip;
 
   //contains all data, including description
   trip?: Trip;

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
+import { Trip } from 'src/app/interfaces/trip.interface';
 import { TripService } from 'src/app/services/trip.service';
-import { TripListing } from '../../interfaces/trip-listing.interface';
 
 @Component({
   selector: 'app-main-page',
@@ -15,6 +15,6 @@ export class MainPageComponent {
     console.log('Logged out succesfully');
   }
 
-  //fetch list of listing-trips
-  listOfTrips: TripListing[] = this.tripService.getListOfDisplayedTrips();
+  //fetch list of displayed trips
+  listOfTrips: Trip[] = this.tripService.getListOfDisplayedTrips();
 }
