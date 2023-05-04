@@ -7,7 +7,7 @@ import { RegisterCredentials } from '../authentication/interfaces/register-crede
 })
 export class AuthenticationService {
 
-  private currentUser!: User;
+  private currentUser: User | null = null;
 
   constructor() { 
     // Check for stored credentials
@@ -38,7 +38,14 @@ export class AuthenticationService {
     console.log(this.currentUser);
   }
 
-  get user(): User {
+  logout() {
+    // Remove the remembered user (nothing will happen if there is no remembered user)
+    localStorage.removeItem("RememberedUser");
+
+    this.currentUser = null;
+  }
+
+  get user(): User | null {
     return this.currentUser;
   }
   get isAuthenticated() : boolean {
