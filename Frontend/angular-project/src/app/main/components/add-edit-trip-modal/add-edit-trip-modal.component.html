@@ -2,16 +2,38 @@
   [(nzVisible)]="isVisible"
   (nzOnOk)="onOk()"
   (nzOnCancel)="onCancel()"
+  [nzClosable]="false"
+  [nzFooter]="modalFooter"
   [nzOkDisabled]="!tripEditForm.valid"
 >
   <ng-container *nzModalContent>
+    <div class="switch-container">
+      <nz-switch class="switch-button"
+        [ngModel]="!isReadOnly"
+        [nzCheckedChildren]="checkedTemplate"
+        [nzUnCheckedChildren]="unCheckedTemplate"
+        (ngModelChange)="isEditingEnabled = $event"
+      ></nz-switch>
+      <span class="switch-label">{{
+        isEditingEnabled ?   " Editing enabled":" Editing disabled"
+      }}</span>
+    </div>
+
+    <ng-template #checkedTemplate>
+      <span nz-icon nzType="check"></span>
+    </ng-template>
+    <ng-template #unCheckedTemplate>
+      <span nz-icon nzType="close"></span>
+    </ng-template>
+
     <form nz-form [formGroup]="tripEditForm">
       <nz-form-item>
         <nz-form-control>
           <nz-input-group>
             <label>City name</label>
             <input
-              readonly="isReadOnly"
+              [readonly]="!isEditingEnabled"
+              [class.inputReadOnly]="!isEditingEnabled"
               type="text"
               nz-input
               formControlName="city"
@@ -28,7 +50,8 @@
           <nz-input-group>
             <label>Country name</label>
             <input
-              readonly="isReadOnly"
+            [readonly]="!isEditingEnabled"
+            [class.inputReadOnly]="!isEditingEnabled"
               type="text"
               nz-input
               formControlName="country"
@@ -45,7 +68,8 @@
           <nz-input-group>
             <label>Trip date</label>
             <input
-              readonly="isReadOnly"
+            [readonly]="!isEditingEnabled"
+            [class.inputReadOnly]="!isEditingEnabled"
               type="text"
               nz-input
               formControlName="date"
@@ -62,7 +86,8 @@
           <nz-input-group>
             <label>Spending</label>
             <input
-              readonly="isReadOnly"
+            [readonly]="!isEditingEnabled"
+            [class.inputReadOnly]="!isEditingEnabled"
               type="number"
               nz-input
               formControlName="spending"
@@ -79,6 +104,8 @@
           <nz-input-group>
             <label>Rating</label>
             <input
+            [readonly]="!isEditingEnabled"
+            [class.inputReadOnly]="!isEditingEnabled"
               readonly="isReadOnly"
               type="number"
               nz-input
@@ -96,6 +123,8 @@
           <nz-input-group>
             <label>Short description</label>
             <input
+            [readonly]="!isEditingEnabled"
+            [class.inputReadOnly]="!isEditingEnabled"
               readonly="isReadOnly"
               type="text"
               nz-input
@@ -110,4 +139,43 @@
       </nz-form-item>
     </form>
   </ng-container>
+
+  <ng-template #modalFooter>
+    <button
+      class="modalFooterSecondaryButton"
+      nz-button
+      nzType="default"
+      *ngIf="!isEditingEnabled"
+      (click)="onCancel()"
+    >
+      Close
+    </button>
+    <button
+      class="modalFooterSecondaryButton"
+      nz-button
+      nzType="default"
+      *ngIf="isEditingEnabled"
+      (click)="onCancel()"
+    >
+      Cancel
+    </button>
+    <button
+      class="modalFooterPrimaryButton"
+      nz-button
+      nzType="primary"
+      *ngIf="isEditingEnabled"
+      (click)="onSubmitEdit()"
+    >
+      Done
+    </button>
+    <button
+      class="modalFooterPrimaryButton"
+      nz-button
+      nzType="primary"
+      *ngIf="!isEditingEnabled"
+      (click)="onOk()"
+    >
+      OK
+    </button>
+  </ng-template>
 </nz-modal>

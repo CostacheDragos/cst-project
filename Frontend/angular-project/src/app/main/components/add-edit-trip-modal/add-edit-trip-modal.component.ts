@@ -13,6 +13,7 @@ export class AddEditTripModalComponent {
   @Output() closeModal: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   tripEditForm!: FormGroup;
+  isEditingEnabled = false;
 
   constructor(private tripService: TripService) {
     tripService.editedTripsubject.subscribe(() => {
@@ -21,6 +22,7 @@ export class AddEditTripModalComponent {
   }
 
   ngOnInit(): void {
+    this.isEditingEnabled = false;
     this.initializeForm();
   }
 
@@ -49,11 +51,18 @@ export class AddEditTripModalComponent {
 
   //click methods
   onOk(): void {
+    this.isEditingEnabled = false;
     this.closeModal.emit(true);
   }
 
   onCancel(): void {
+    this.isEditingEnabled = false;
     this.closeModal.emit(true);
+  }
+
+  //TODO edit
+  onSubmitEdit(): void {
+    console.log('edit');
   }
 
   // getters

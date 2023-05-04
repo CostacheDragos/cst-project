@@ -6,6 +6,7 @@ import { MainRoutingModule } from './main-routing.module';
 import { TripCardComponent } from './components/trip-card/trip-card.component';
 import { MainPageComponent } from './components/main-page/main-page.component';
 import { TripsDashboardComponent } from './components/trips-dashboard/trips-dashboard.component';
+import { AddEditTripModalComponent } from './components/add-edit-trip-modal/add-edit-trip-modal.component';
 
 //ng zorro
 
@@ -17,10 +18,11 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
 
 //bonus library used for search
 import { Ng2SearchPipeModule } from 'ng2-search-filter';
-import { AddEditTripModalComponent } from './components/add-edit-trip-modal/add-edit-trip-modal.component';
+
 
 @NgModule({
   declarations: [
@@ -45,6 +47,7 @@ import { AddEditTripModalComponent } from './components/add-edit-trip-modal/add-
     NzTableModule,
     NzModalModule,
     NzFormModule,
+    NzSwitchModule
   ],
 })
 export class MainModule {}
