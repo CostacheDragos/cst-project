@@ -46,7 +46,7 @@ export class TripsDashboardComponent {
   }
 
   next() {
-    if (this.currentPageStartIndex + this.pageLength > this.listOfTrips.length) return;
+    if (this.currentPageStartIndex + this.pageLength >= this.listOfTrips.length) return;
 
     this.currentPageStartIndex += this.pageLength;
     let lastCityIndexOfCurrentPage;
@@ -174,6 +174,10 @@ export class TripsDashboardComponent {
       this.currentPageStartIndex,
       this.currentPageStartIndex + this.pageLength
     );
+
+    // If the last trip on this page was just deleted, go to the previous page
+    if(this.currentPageTrips.length === 0)
+      this.previous();
   }
   //////////////////////////////////////////////////////////////////////////////////////
 
