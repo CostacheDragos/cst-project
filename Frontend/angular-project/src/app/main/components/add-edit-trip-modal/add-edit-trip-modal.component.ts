@@ -60,9 +60,19 @@ export class AddEditTripModalComponent {
     this.closeModal.emit(true);
   }
 
-  //TODO edit
   onSubmitEdit(): void {
-    console.log('edit');
+    this.tripService.editedTrip.city = this.tripEditForm.value.city;
+    this.tripService.editedTrip.country = this.tripEditForm.value.country;
+    this.tripService.editedTrip.date = this.tripEditForm.value.date;
+    this.tripService.editedTrip.spending = this.tripEditForm.value.spending;
+    this.tripService.editedTrip.rating = this.tripEditForm.value.rating;
+    this.tripService.editedTrip.description =
+      this.tripEditForm.value.description;
+
+    this.tripService.updateOrCreateTrip(this.tripService.editedTrip);
+
+    this.isEditingEnabled = false;
+    this.closeModal.emit(true);
   }
 
   // getters

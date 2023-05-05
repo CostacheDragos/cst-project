@@ -15,6 +15,6 @@ export class MainPageComponent {
     console.log('Logged out succesfully');
   }
 
-  //fetch list of displayed trips
+  //fetch list of trips
   listOfTrips: Trip[] = this.tripService.getListOfDisplayedTrips();
 }

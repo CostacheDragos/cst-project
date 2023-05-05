@@ -7,8 +7,10 @@ import tripsDataJson from './trips.json';
 @Injectable({
   providedIn: 'root',
 })
+//TODO - change with server requests
 export class TripService {
-  private tripsData: Trip[] = tripsDataJson;
+  private listOfTripsData: Trip[] = tripsDataJson;
+  listOfTripsSubject = new Subject<Trip[]>();
 
   private listOfDisplayedTrips!: Trip[];
 
@@ -21,16 +23,22 @@ export class TripService {
   get editedTrip() {
     return this.edited;
   }
+  get listOfTrips(): Trip[] {
+    return this.listOfTripsData;
+  }
 
   //setter
   set editedTrip(trip: Trip) {
     this.edited = trip;
     this.editedTripsubject.next(trip);
   }
+  set listOfTrips(newListOfTrips: any) {
+    this.listOfTripsData = newListOfTrips;
+    this.listOfTripsSubject.next(newListOfTrips);
+  }
 
-  //TODO - change with server request without description field
   getListOfDisplayedTrips() {
-    this.listOfDisplayedTrips = this.tripsData.map((trip) => {
+    this.listOfDisplayedTrips = this.listOfTripsData.map((trip) => {
       return {
         userID: trip.userID,
         tripID: trip.tripID,
@@ -45,15 +53,13 @@ export class TripService {
     return this.listOfDisplayedTrips;
   }
 
-  //TODO - change with server request
   //get details for given tripId
   getDetailsForTripId(tripId: string) {
-    return this.tripsData.find((trip) => trip.tripID === tripId);
+    return this.listOfTripsData.find((trip) => trip.tripID === tripId);
   }
 
   //delete trip
   deleteTrip(tripId: string) {
-    //TODO delete trip from backend
     console.log('Trip with id ' + tripId + ' has been deleted');
   }
 
@@ -69,5 +75,28 @@ export class TripService {
       rating: '',
       description: '',
     };
+  }
+
+  addNewTrip(newTrip: Trip) {
+    this.listOfTripsData.push(newTrip);
+    this.listOfTripsSubject.next(this.listOfTripsData);
+  }
+
+   //main function used for adding/editing a trip
+  updateOrCreateTrip(tripToBeUpdated: Trip) {
+    const existingTrip = this.listOfTripsData.find(
+      (trip) => trip.tripID === tripToBeUpdated.tripID
+    );
+    if (existingTrip !== undefined) {
+      existingTrip.city = tripToBeUpdated.city;
+      existingTrip.country = tripToBeUpdated.country;
+      existingTrip.date = tripToBeUpdated.date;
+      existingTrip.spending = tripToBeUpdated.spending;
+      existingTrip.rating = tripToBeUpdated.rating;
+      existingTrip.description = tripToBeUpdated.description;
+      return;
+    }
+
+    this.addNewTrip(tripToBeUpdated);
   }
 }
