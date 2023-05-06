@@ -94,9 +94,10 @@ export class TripService {
       existingTrip.spending = tripToBeUpdated.spending;
       existingTrip.rating = tripToBeUpdated.rating;
       existingTrip.description = tripToBeUpdated.description;
-      return;
     }
+    else
+      this.addNewTrip(tripToBeUpdated);
 
-    this.addNewTrip(tripToBeUpdated);
+    this.listOfTripsSubject.next(this.listOfTrips);
   }
 }
