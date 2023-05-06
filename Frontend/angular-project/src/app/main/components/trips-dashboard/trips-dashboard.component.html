@@ -1,4 +1,11 @@
-<button nz-button nzType="primary" class="addTripButton">Add trip</button>
+<button
+  nz-button
+  nzType="primary"
+  class="addTripButton"
+  (click)="onAddTripClick()"
+>
+  Add trip
+</button>
 <div class="pagination-content">
   <div class="actionButtons">
     <a
@@ -88,9 +95,9 @@
     </ng-template>
   </div>
   <app-add-edit-trip-modal
-    [isVisible]="isViewDetailsModalOpen"
-    [isReadOnly]="isReadOnly"
-    (closeModal)="isViewDetailsModalOpen = false"
+    [isVisible]="isAddEditTripModalOpen"
+    [isEditingEnabled]="isEditingEnabled"
+    (closeModal)="isAddEditTripModalOpen = false"
   ></app-add-edit-trip-modal>
   <div *ngIf="listOfTrips.length !== 0" class="trips-list">
     <!--* This is not a normal pipe, is used for searching (Ng2SearchPipeModule)-->

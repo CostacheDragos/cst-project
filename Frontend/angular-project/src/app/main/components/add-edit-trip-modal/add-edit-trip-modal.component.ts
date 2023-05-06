@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { TripService } from 'src/app/services/trip.service';
+import { AddEditValidators } from '../../helpers/add-edit-trip-validators';
 
 @Component({
   selector: 'app-add-edit-trip-modal',
@@ -9,11 +10,10 @@ import { TripService } from 'src/app/services/trip.service';
 })
 export class AddEditTripModalComponent {
   @Input() isVisible: boolean = false;
-  @Input() isReadOnly: boolean = false;
+  @Input() isEditingEnabled: boolean = false;
   @Output() closeModal: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   tripEditForm!: FormGroup;
-  isEditingEnabled = false;
 
   constructor(private tripService: TripService) {
     tripService.editedTripsubject.subscribe(() => {
@@ -22,7 +22,6 @@ export class AddEditTripModalComponent {
   }
 
   ngOnInit(): void {
-    this.isEditingEnabled = false;
     this.initializeForm();
   }
 
@@ -36,12 +35,15 @@ export class AddEditTripModalComponent {
       ]),
       date: new FormControl(this.tripService.editedTrip.date, [
         Validators.required,
+        AddEditValidators.dateValidator,
       ]),
       spending: new FormControl(this.tripService.editedTrip.spending, [
         Validators.required,
+        AddEditValidators.spendingValidator,
       ]),
       rating: new FormControl(this.tripService.editedTrip.rating, [
         Validators.required,
+        AddEditValidators.ratingValidator,
       ]),
       description: new FormControl(this.tripService.editedTrip.description, [
         Validators.required,
@@ -51,16 +53,14 @@ export class AddEditTripModalComponent {
 
   //click methods
   onOk(): void {
-    this.isEditingEnabled = false;
     this.closeModal.emit(true);
   }
 
   onCancel(): void {
-    this.isEditingEnabled = false;
     this.closeModal.emit(true);
   }
 
-  onSubmitEdit(): void {
+  onSubmitForm(): void {
     this.tripService.editedTrip.city = this.tripEditForm.value.city;
     this.tripService.editedTrip.country = this.tripEditForm.value.country;
     this.tripService.editedTrip.date = this.tripEditForm.value.date;
@@ -71,7 +71,6 @@ export class AddEditTripModalComponent {
 
     this.tripService.updateOrCreateTrip(this.tripService.editedTrip);
 
-    this.isEditingEnabled = false;
     this.closeModal.emit(true);
   }
 

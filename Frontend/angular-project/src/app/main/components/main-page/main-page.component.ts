@@ -13,20 +13,20 @@ export class MainPageComponent {
   listOfTrips!: Trip[];
 
   constructor(
-    private tripService: TripService, 
+    private tripService: TripService,
     private authenticationService: AuthenticationService,
     private router: Router
-    ) {
-      // Listen for any changes in the trips list
-      this.tripService.listOfTripsSubject.subscribe(res => {
-        this.listOfTrips = [...res];
-      });
-    }
+  ) {
+    // Listen for any changes in the trips list
+    this.tripService.listOfTripsSubject.subscribe((res) => {
+      this.listOfTrips = [...res];
+    });
+  }
 
   ngOnInit(): void {
     this.listOfTrips = this.tripService.listOfTrips;
   }
-  
+
   logout() {
     // Log the user out
     this.authenticationService.logout();

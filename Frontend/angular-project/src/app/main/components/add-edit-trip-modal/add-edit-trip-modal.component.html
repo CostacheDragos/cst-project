@@ -8,14 +8,15 @@
 >
   <ng-container *nzModalContent>
     <div class="switch-container">
-      <nz-switch class="switch-button"
-        [ngModel]="!isReadOnly"
+      <nz-switch
+        class="switch-button"
+        [ngModel]="isEditingEnabled"
         [nzCheckedChildren]="checkedTemplate"
         [nzUnCheckedChildren]="unCheckedTemplate"
         (ngModelChange)="isEditingEnabled = $event"
       ></nz-switch>
       <span class="switch-label">{{
-        isEditingEnabled ?   " Editing enabled":" Editing disabled"
+        isEditingEnabled ? " Editing enabled" : " Editing disabled"
       }}</span>
     </div>
 
@@ -50,8 +51,8 @@
           <nz-input-group>
             <label>Country name</label>
             <input
-            [readonly]="!isEditingEnabled"
-            [class.inputReadOnly]="!isEditingEnabled"
+              [readonly]="!isEditingEnabled"
+              [class.inputReadOnly]="!isEditingEnabled"
               type="text"
               nz-input
               formControlName="country"
@@ -68,16 +69,19 @@
           <nz-input-group>
             <label>Trip date</label>
             <input
-            [readonly]="!isEditingEnabled"
-            [class.inputReadOnly]="!isEditingEnabled"
+              [readonly]="!isEditingEnabled"
+              [class.inputReadOnly]="!isEditingEnabled"
               type="text"
               nz-input
               formControlName="date"
-              placeholder="dd/mm/yyy"
+              placeholder="dd/mm/yyyy"
             />
           </nz-input-group>
           <div class="red-text" *ngIf="date?.errors?.['required']">
             Date is required!
+          </div>
+          <div class="red-text" *ngIf="date?.errors?.['invalidDate']">
+            Invalid date format!
           </div>
         </nz-form-control>
       </nz-form-item>
@@ -86,8 +90,8 @@
           <nz-input-group>
             <label>Spending</label>
             <input
-            [readonly]="!isEditingEnabled"
-            [class.inputReadOnly]="!isEditingEnabled"
+              [readonly]="!isEditingEnabled"
+              [class.inputReadOnly]="!isEditingEnabled"
               type="number"
               nz-input
               formControlName="spending"
@@ -97,6 +101,9 @@
           <div class="red-text" *ngIf="spending?.errors?.['required']">
             Spending is required!
           </div>
+          <div class="red-text" *ngIf="spending?.errors?.['spendingMin']">
+            Spending must be a number greater that 0!
+          </div>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
@@ -104,8 +111,8 @@
           <nz-input-group>
             <label>Rating</label>
             <input
-            [readonly]="!isEditingEnabled"
-            [class.inputReadOnly]="!isEditingEnabled"
+              [readonly]="!isEditingEnabled"
+              [class.inputReadOnly]="!isEditingEnabled"
               readonly="isReadOnly"
               type="number"
               nz-input
@@ -116,6 +123,9 @@
           <div class="red-text" *ngIf="rating?.errors?.['required']">
             Rating is required!
           </div>
+          <div class="red-text" *ngIf="rating?.errors?.['invalidRating']">
+            Rating must be a number between 0 and 5!
+          </div>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
@@ -123,8 +133,8 @@
           <nz-input-group>
             <label>Short description</label>
             <input
-            [readonly]="!isEditingEnabled"
-            [class.inputReadOnly]="!isEditingEnabled"
+              [readonly]="!isEditingEnabled"
+              [class.inputReadOnly]="!isEditingEnabled"
               readonly="isReadOnly"
               type="text"
               nz-input
@@ -163,8 +173,9 @@
       class="modalFooterPrimaryButton"
       nz-button
       nzType="primary"
+      [disabled]="!tripEditForm.valid"
       *ngIf="isEditingEnabled"
-      (click)="onSubmitEdit()"
+      (click)="onSubmitForm()"
     >
       Done
     </button>
@@ -172,6 +183,7 @@
       class="modalFooterPrimaryButton"
       nz-button
       nzType="primary"
+      [disabled]="!tripEditForm.valid"
       *ngIf="!isEditingEnabled"
       (click)="onOk()"
     >

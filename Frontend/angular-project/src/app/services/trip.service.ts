@@ -12,8 +12,6 @@ export class TripService {
   private listOfTripsData: Trip[] = tripsDataJson;
   listOfTripsSubject = new Subject<Trip[]>();
 
-  private listOfDisplayedTrips!: Trip[];
-
   private edited: Trip = this.emptyTrip();
   editedTripsubject = new Subject<Trip>();
 
@@ -35,22 +33,6 @@ export class TripService {
   set listOfTrips(newListOfTrips: any) {
     this.listOfTripsData = newListOfTrips;
     this.listOfTripsSubject.next(newListOfTrips);
-  }
-
-  getListOfDisplayedTrips() {
-    this.listOfDisplayedTrips = this.listOfTripsData.map((trip) => {
-      return {
-        userID: trip.userID,
-        tripID: trip.tripID,
-        city: trip.city,
-        country: trip.country,
-        date: trip.date,
-        spending: trip.spending,
-        rating: trip.rating,
-        description: '',
-      };
-    });
-    return this.listOfDisplayedTrips;
   }
 
   //get details for given tripId
@@ -82,7 +64,7 @@ export class TripService {
     this.listOfTripsSubject.next(this.listOfTripsData);
   }
 
-   //main function used for adding/editing a trip
+  //main function used for adding/editing a trip
   updateOrCreateTrip(tripToBeUpdated: Trip) {
     const existingTrip = this.listOfTripsData.find(
       (trip) => trip.tripID === tripToBeUpdated.tripID
@@ -94,9 +76,7 @@ export class TripService {
       existingTrip.spending = tripToBeUpdated.spending;
       existingTrip.rating = tripToBeUpdated.rating;
       existingTrip.description = tripToBeUpdated.description;
-    }
-    else
-      this.addNewTrip(tripToBeUpdated);
+    } else this.addNewTrip(tripToBeUpdated);
 
     this.listOfTripsSubject.next(this.listOfTrips);
   }

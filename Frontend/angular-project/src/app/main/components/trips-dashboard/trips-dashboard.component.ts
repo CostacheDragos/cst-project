@@ -17,10 +17,10 @@ export class TripsDashboardComponent {
   visible = true;
   searchText!: string;
 
-  isViewDetailsModalOpen: boolean = false;
-  isReadOnly: boolean = false;
+  isAddEditTripModalOpen: boolean = false;
+  isEditingEnabled: boolean = false;
 
-  constructor(private tripService:TripService) {}
+  constructor(private tripService: TripService) {}
 
   ngOnInit(): void {
     this.currentPageTrips = this.listOfTrips.slice(
@@ -46,7 +46,8 @@ export class TripsDashboardComponent {
   }
 
   next() {
-    if (this.currentPageStartIndex + this.pageLength >= this.listOfTrips.length) return;
+    if (this.currentPageStartIndex + this.pageLength >= this.listOfTrips.length)
+      return;
 
     this.currentPageStartIndex += this.pageLength;
     let lastCityIndexOfCurrentPage;
@@ -176,14 +177,19 @@ export class TripsDashboardComponent {
     );
 
     // If the last trip on this page was just deleted, go to the previous page
-    if(this.currentPageTrips.length === 0)
-      this.previous();
+    if (this.currentPageTrips.length === 0) this.previous();
   }
   //////////////////////////////////////////////////////////////////////////////////////
 
-  
   onOpenViewDetailsModal() {
-    this.isViewDetailsModalOpen = true;
-    this.isReadOnly = true;
+    this.isAddEditTripModalOpen = true;
+    this.isEditingEnabled = false;
+  }
+
+  onAddTripClick() {
+    this.isAddEditTripModalOpen = true;
+    this.isEditingEnabled = true;
+
+    this.tripService.editedTrip = this.tripService.emptyTrip();
   }
 }
