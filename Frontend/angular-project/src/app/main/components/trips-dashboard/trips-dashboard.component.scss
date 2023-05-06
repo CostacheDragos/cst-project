@@ -29,6 +29,10 @@
     row-gap: 50px;
   }
 
+  .empty-trips-list-warning {
+    margin: auto;
+  }
+
   .actionButtons {
     display: flex;
     justify-content: space-between;
@@ -75,5 +79,5 @@
   top: 70%;
   left: 50%;
   transform: translate(-50%, -50%);
-  margin-bottom:30px;
+  margin-bottom: 30px;
 }

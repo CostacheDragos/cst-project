@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
+import { Trip } from 'src/app/interfaces/trip.interface';
 import { TripService } from 'src/app/services/trip.service';
-import { TripListing } from '../../interfaces/trip-listing.interface';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { Router } from '@angular/router';
 
@@ -10,11 +10,22 @@ import { Router } from '@angular/router';
   styleUrls: ['./main-page.component.scss'],
 })
 export class MainPageComponent {
+  listOfTrips!: Trip[];
+
   constructor(
-    private tripService: TripService, 
+    private tripService: TripService,
     private authenticationService: AuthenticationService,
     private router: Router
-    ) {}
+  ) {
+    // Listen for any changes in the trips list
+    this.tripService.listOfTripsSubject.subscribe((res) => {
+      this.listOfTrips = [...res];
+    });
+  }
+
+  ngOnInit(): void {
+    this.listOfTrips = this.tripService.listOfTrips;
+  }
 
   logout() {
     // Log the user out
@@ -23,7 +34,4 @@ export class MainPageComponent {
     // Take the user back to the login page
     this.router.navigate(['/login']);
   }
-
-  //fetch list of listing-trips
-  listOfTrips: TripListing[] = this.tripService.getListOfListingTrips();
 }

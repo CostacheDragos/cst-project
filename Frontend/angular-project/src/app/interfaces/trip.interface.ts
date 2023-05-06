@@ -1,4 +1,4 @@
-export interface TripListing {
+export interface Trip {
     userID: string;
     tripID: string;
     city: string;
@@ -6,5 +6,6 @@ export interface TripListing {
     date: string;
     spending: number;
     rating: number;
+    description:string;
   }
   

@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { TripListing } from '../../interfaces/trip-listing.interface';
+import { Trip } from 'src/app/interfaces/trip.interface';
+import { TripService } from 'src/app/services/trip.service';
 
 @Component({
   selector: 'app-trips-dashboard',
@@ -8,59 +9,66 @@ import { TripListing } from '../../interfaces/trip-listing.interface';
 })
 export class TripsDashboardComponent {
   @Input()
-  listOfTrips!: TripListing[];
+  listOfTrips!: Trip[];
 
-  currentPageTrips!: TripListing[];
-  startIndex: number = 0;
+  currentPageTrips!: Trip[];
+  currentPageStartIndex: number = 0;
   pageLength: number = 6;
   visible = true;
   searchText!: string;
 
-  constructor() {}
+  isAddEditTripModalOpen: boolean = false;
+  isEditingEnabled: boolean = false;
+
+  constructor(private tripService: TripService) {}
 
   ngOnInit(): void {
     this.currentPageTrips = this.listOfTrips.slice(
-      this.startIndex,
+      this.currentPageStartIndex,
       this.pageLength
     );
   }
 
-  //Pagination methods
+  //******************************* Pagination methods **********************************
+  //////////////////////////////////////////////////////////////////////////////////////
   previous() {
-    if (this.startIndex - this.pageLength < 0) {
+    if (this.currentPageStartIndex - this.pageLength < 0) {
       return;
     }
 
-    const lastCityIndexOfCurrentPage = this.startIndex;
-    this.startIndex -= this.pageLength;
+    const lastCityIndexOfCurrentPage = this.currentPageStartIndex;
+    this.currentPageStartIndex -= this.pageLength;
 
     this.currentPageTrips = this.listOfTrips.slice(
-      this.startIndex,
+      this.currentPageStartIndex,
       lastCityIndexOfCurrentPage
     );
   }
 
   next() {
-    if (this.startIndex + this.pageLength > this.listOfTrips.length) return;
+    if (this.currentPageStartIndex + this.pageLength >= this.listOfTrips.length)
+      return;
 
-    this.startIndex += this.pageLength;
+    this.currentPageStartIndex += this.pageLength;
     let lastCityIndexOfCurrentPage;
 
-    if (this.startIndex + this.pageLength < this.listOfTrips.length)
-      lastCityIndexOfCurrentPage = this.startIndex + this.pageLength;
+    if (this.currentPageStartIndex + this.pageLength < this.listOfTrips.length)
+      lastCityIndexOfCurrentPage = this.currentPageStartIndex + this.pageLength;
     else lastCityIndexOfCurrentPage = this.listOfTrips.length;
 
     this.currentPageTrips = this.listOfTrips.slice(
-      this.startIndex,
+      this.currentPageStartIndex,
       lastCityIndexOfCurrentPage
     );
   }
+  //////////////////////////////////////////////////////////////////////////////////////
 
-  //Sorting methods
+  //******************************* Sorting methods ************************************
+  //////////////////////////////////////////////////////////////////////////////////////
   sortByCityAscending() {
     this.listOfTrips.sort((a, b) => a.city.localeCompare(b.city));
     this.currentPageTrips = this.listOfTrips.slice(
-      this.startIndex,
+      this.currentPageStartIndex,
       this.pageLength
     );
     this.visible = false;
@@ -69,7 +77,7 @@ export class TripsDashboardComponent {
   sortByCityDescending() {
     this.listOfTrips.sort((a, b) => b.city.localeCompare(a.city));
     this.currentPageTrips = this.listOfTrips.slice(
-      this.startIndex,
+      this.currentPageStartIndex,
       this.pageLength
     );
     this.visible = false;
@@ -78,7 +86,7 @@ export class TripsDashboardComponent {
   sortByCountryAscending() {
     this.listOfTrips.sort((a, b) => a.country.localeCompare(b.country));
     this.currentPageTrips = this.listOfTrips.slice(
-      this.startIndex,
+      this.currentPageStartIndex,
       this.pageLength
     );
     this.visible = false;
@@ -87,7 +95,7 @@ export class TripsDashboardComponent {
   sortByCountryDescending() {
     this.listOfTrips.sort((a, b) => b.country.localeCompare(a.country));
     this.currentPageTrips = this.listOfTrips.slice(
-      this.startIndex,
+      this.currentPageStartIndex,
       this.pageLength
     );
     this.visible = false;
@@ -100,7 +108,7 @@ export class TripsDashboardComponent {
       return Date.parse(dateA) - Date.parse(dateB);
     });
     this.currentPageTrips = this.listOfTrips.slice(
-      this.startIndex,
+      this.currentPageStartIndex,
       this.pageLength
     );
     this.visible = false;
@@ -113,7 +121,7 @@ export class TripsDashboardComponent {
       return Date.parse(dateB) - Date.parse(dateA);
     });
     this.currentPageTrips = this.listOfTrips.slice(
-      this.startIndex,
+      this.currentPageStartIndex,
       this.pageLength
     );
     this.visible = false;
@@ -122,7 +130,7 @@ export class TripsDashboardComponent {
   sortByRatingAscending() {
     this.listOfTrips.sort((a, b) => a.rating - b.rating);
     this.currentPageTrips = this.listOfTrips.slice(
-      this.startIndex,
+      this.currentPageStartIndex,
       this.pageLength
     );
     this.visible = false;
@@ -131,7 +139,7 @@ export class TripsDashboardComponent {
   sortByRatingDescending() {
     this.listOfTrips.sort((a, b) => b.rating - a.rating);
     this.currentPageTrips = this.listOfTrips.slice(
-      this.startIndex,
+      this.currentPageStartIndex,
       this.pageLength
     );
     this.visible = false;
@@ -140,7 +148,7 @@ export class TripsDashboardComponent {
   sortBySpendingAscending() {
     this.listOfTrips.sort((a, b) => a.spending - b.spending);
     this.currentPageTrips = this.listOfTrips.slice(
-      this.startIndex,
+      this.currentPageStartIndex,
       this.pageLength
     );
     this.visible = false;
@@ -149,9 +157,39 @@ export class TripsDashboardComponent {
   sortBySpendingDescending() {
     this.listOfTrips.sort((a, b) => b.spending - a.spending);
     this.currentPageTrips = this.listOfTrips.slice(
-      this.startIndex,
+      this.currentPageStartIndex,
       this.pageLength
     );
     this.visible = false;
+  }
+  //////////////////////////////////////////////////////////////////////////////////////
+
+  //************************** Trip manipulation methods *******************************
+  //this method is called when user deletes a trip in order to delete it from UI
+  deleteTrip(id: string) {
+    this.listOfTrips.splice(
+      this.listOfTrips.findIndex((item) => item.tripID === id),
+      1
+    );
+    this.currentPageTrips = this.listOfTrips.slice(
+      this.currentPageStartIndex,
+      this.currentPageStartIndex + this.pageLength
+    );
+
+    // If the last trip on this page was just deleted, go to the previous page
+    if (this.currentPageTrips.length === 0) this.previous();
+  }
+  //////////////////////////////////////////////////////////////////////////////////////
+
+  onOpenViewDetailsModal() {
+    this.isAddEditTripModalOpen = true;
+    this.isEditingEnabled = false;
+  }
+
+  onAddTripClick() {
+    this.isAddEditTripModalOpen = true;
+    this.isEditingEnabled = true;
+
+    this.tripService.editedTrip = this.tripService.emptyTrip();
   }
 }
