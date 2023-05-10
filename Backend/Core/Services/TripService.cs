@@ -23,6 +23,18 @@ namespace Core.Services
             return result;
         }
 
+        public List<TripListingDTO> GetAll()
+        {
+            var result = unitOfWork.Trips.GetAll().ToTripListingDTOs();
+            return result;
+        }
+
+        public List<TripListingDTO> GetAllByUserId(int userId)
+        {
+            var result = unitOfWork.Trips.GetAllByUserId(userId).ToTripListingDTOs();
+            return result;
+        }
+
         public bool Create(TripCreationDTO tripCreationDTO)
         {
             if (tripCreationDTO == null) return false;

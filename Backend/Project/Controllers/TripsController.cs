@@ -1,8 +1,10 @@
 ﻿using Core.Dtos;
 using Core.Services;
 using DataLayer.Dtos;
+using DataLayer.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Project.Controllers
 {
@@ -26,9 +28,50 @@ namespace Project.Controllers
         [Authorize(Roles = "User")]
         public IActionResult GetById(int tripId)
         {
+            ClaimsPrincipal user = User;
+
             var result = tripService.GetById(tripId);
-            if(result ==null)
+            if (result == null)
                 return NotFound();
+
+            int userId = int.Parse(user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+            if (userId == result.UserId)
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return Unauthorized();
+            }
+        }
+
+        /// <summary>
+        /// Get all trips for authenticated user
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getAllForUser")]
+        [Authorize(Roles = "User")]
+        public IActionResult GetAllForUser()
+        {
+            ClaimsPrincipal user = User;
+            int userId = int.Parse(user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);            
+            var result = tripService.GetAllByUserId(userId);
+            if(result == null)
+                return NoContent();
+            return Ok(result);
+        }
+
+
+        /// <summary>
+        /// Get everyone's trips
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getAll")]
+        [Authorize(Roles = "User")]
+        public IActionResult GetAll()
+        {
+            var result = tripService.GetAll();
+            if (result == null) return NoContent();
             return Ok(result);
         }
 
@@ -74,6 +117,11 @@ namespace Project.Controllers
             }
         }
 
+        /// <summary>
+        /// Edit trip
+        /// </summary>
+        /// <param name="tripEditingDTO"></param>
+        /// <returns></returns>
         [HttpPut("edit")]
         [Authorize(Roles = "User")]
         public IActionResult Edit([FromBody] TripEditingDTO tripEditingDTO)

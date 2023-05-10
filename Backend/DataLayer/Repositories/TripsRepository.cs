@@ -1,4 +1,5 @@
-﻿using DataLayer.Entities;
+﻿using DataLayer.Dtos;
+using DataLayer.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,10 @@ namespace DataLayer.Repositories
         public TripsRepository(AppDbContext dbContext) : base(dbContext)
         {
             this.dbContext = dbContext;
+        }
+        public List<Trip> GetAllByUserId(int userId)
+        {
+            return dbContext.Trips.Where(x => x.UserId == userId).ToList();
         }
     }
 }
