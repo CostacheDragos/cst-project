@@ -23,6 +23,7 @@ namespace Project.Settings
         {
             services.AddScoped<UserService>();
             services.AddScoped<AuthorizationService>();
+            services.AddScoped<TripService>();
         }
 
         private static void AddRepositories(IServiceCollection services)
