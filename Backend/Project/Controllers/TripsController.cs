@@ -22,7 +22,7 @@ namespace Project.Controllers
         /// </summary>
         /// <param name="tripId"></param>
         /// <returns></returns>
-        [HttpGet("getTripById")]
+        [HttpGet("getById")]
         [Authorize(Roles = "User")]
         public IActionResult GetById(int tripId)
         {
@@ -38,7 +38,7 @@ namespace Project.Controllers
         /// </summary>
         /// <param name="tripCreationDTO"></param>
         /// <returns></returns>
-        [HttpPost("createTrip")]
+        [HttpPost("create")]
         [Authorize(Roles = "User")]
         public IActionResult Create([FromBody] TripCreationDTO tripCreationDTO)
         {
@@ -53,6 +53,40 @@ namespace Project.Controllers
             }
         }
 
-        
+
+        /// <summary>
+        /// Delete trip
+        /// </summary>
+        /// <param name="tripDeletionDTO"></param>
+        /// <returns></returns>
+        [HttpDelete("delete")]
+        [Authorize(Roles = "User")]
+        public IActionResult Delete([FromBody] TripDeletionDTO tripDeletionDTO)
+        {
+            var result = tripService.Delete(tripDeletionDTO.TripId);
+            if (result == true)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPut("edit")]
+        [Authorize(Roles = "User")]
+        public IActionResult Edit([FromBody] TripEditingDTO tripEditingDTO)
+        {
+            var result = tripService.Edit(tripEditingDTO);
+            if (result == true)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
+        }
     }
 }
