@@ -39,7 +39,7 @@ namespace Core.Services
                 PasswordHash = hashedPassword,
                 Name = registerData.Name,
                 Surname = registerData.Surname,
-                RoleId = (int)RoleEnum.User
+                RoleId = (int)RoleEnums.User
             };
 
             unitOfWork.Users.Insert(user);
