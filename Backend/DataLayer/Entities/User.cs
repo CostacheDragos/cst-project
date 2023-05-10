@@ -15,7 +15,5 @@ namespace DataLayer.Entities
         public int RoleId { get; set; } // Foreign key
         public Role Role { get; set; } // Navigation property
 
-        // Maybe add a date too?
-
     }
 }
