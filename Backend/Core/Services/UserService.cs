@@ -35,11 +35,11 @@ namespace Core.Services
 
             var user = new User
             {
-                UserId = Guid.NewGuid(),
                 Email = registerData.Email,
                 PasswordHash = hashedPassword,
                 Name = registerData.Name,
                 Surname = registerData.Surname,
+                RoleId = (int)RoleEnum.User
             };
 
             unitOfWork.Users.Insert(user);
