@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DataLayer.Mapping;
+using DataLayer.Dtos;
 
 namespace Core.Services
 {
@@ -70,9 +71,9 @@ namespace Core.Services
         }
 
 
-        public List<User> GetAll()
+        public List<UserDto> GetAll()
         {
-            var results = unitOfWork.Users.GetAll();
+            var results = unitOfWork.Users.GetAll().ToUserDtos();
 
             return results;
         }

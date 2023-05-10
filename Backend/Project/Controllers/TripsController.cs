@@ -19,6 +19,7 @@ namespace Project.Controllers
             this.tripService = tripService;
         }
 
+
         /// <summary>
         /// Get Trip by id
         /// </summary>
@@ -45,6 +46,7 @@ namespace Project.Controllers
             }
         }
 
+
         /// <summary>
         /// Get all trips for authenticated user
         /// </summary>
@@ -58,20 +60,6 @@ namespace Project.Controllers
             var result = tripService.GetAllByUserId(userId);
             if(result == null)
                 return NoContent();
-            return Ok(result);
-        }
-
-
-        /// <summary>
-        /// Get everyone's trips
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet("getAll")]
-        [Authorize(Roles = "User")]
-        public IActionResult GetAll()
-        {
-            var result = tripService.GetAll();
-            if (result == null) return NoContent();
             return Ok(result);
         }
 
@@ -116,6 +104,7 @@ namespace Project.Controllers
                 return BadRequest();
             }
         }
+
 
         /// <summary>
         /// Edit trip
