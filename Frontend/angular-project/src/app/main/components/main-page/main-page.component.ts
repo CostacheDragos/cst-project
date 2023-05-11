@@ -32,6 +32,6 @@ export class MainPageComponent {
     this.authenticationService.logout();
 
     // Take the user back to the login page
-    this.router.navigate(['/login']);
+    this.router.navigate(['/auth/login']);
   }
 }

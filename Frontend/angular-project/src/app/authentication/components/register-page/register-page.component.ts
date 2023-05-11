@@ -52,7 +52,7 @@ export class RegisterPageComponent implements OnInit {
   }
 
   navigateToLogin() {
-    this.router.navigate(['/login']);
+    this.router.navigate(['/auth/login']);
   }
 
   navigateToMain() {

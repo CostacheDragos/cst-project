@@ -5,6 +5,11 @@ import { AuthGuard } from './helpers/auth-route-guard';
 const routes: Routes = [
   {
     path: '',
+    pathMatch: 'full',
+    redirectTo: 'auth',
+  },
+  {
+    path: 'auth',
     loadChildren: () => import('./authentication/authentication.module').then(m => m.AuthenticationModule),
   },
   
