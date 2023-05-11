@@ -14,6 +14,6 @@ namespace DataLayer.Entities
         public string Surname { get; set; }
         public int RoleId { get; set; } // Foreign key
         public Role Role { get; set; } // Navigation property
-
+        public List<Trip> Trips { get; set; }
     }
 }
