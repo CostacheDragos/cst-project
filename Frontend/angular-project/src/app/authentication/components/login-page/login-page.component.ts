@@ -37,7 +37,11 @@ export class LoginPageComponent implements OnInit {
       email: this.loginForm.value.email,
       password: this.loginForm.value.password,
     }
-    this.authenticationService.login(credentials);
+    this.authenticationService.login(credentials).then(
+      statusCode => {
+        console.log(statusCode);
+      }
+    );
 
     // If the user has logged in successfully, redirect to the main page
     if(this.authenticationService.isAuthenticated) {

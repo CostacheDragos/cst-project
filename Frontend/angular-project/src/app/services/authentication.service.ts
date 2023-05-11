@@ -18,17 +18,32 @@ export class AuthenticationService {
       this.currentUser = JSON.parse(storedData);
   }
 
-  login(credentials: LoginCredentials) {
-    if(credentials.email === 'test@test.com' && credentials.password === 'password'){
-      this.currentUser = {
-        id: '1',
-        email: 'test@test.com',
+  async login(credentials: LoginCredentials) {
+    const response = await fetch(
+      `${this.baseURL}/login`,
+      {
+        method: "POST",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          ...credentials
+        }),
       }
+    );
+    console.log(response);
+    return response.status;
+    // if(credentials.email === 'test@test.com' && credentials.password === 'password'){
+    //   this.currentUser = {
+    //     id: '1',
+    //     email: 'test@test.com',
+    //   }
       
-      console.log(this.currentUser);
-    }
-    else
-      console.log("Wrong credentials");
+    //   console.log(this.currentUser);
+    // }
+    // else
+    //   console.log("Wrong credentials");
   }
 
   async register(credentials: RegisterCredentials) {
