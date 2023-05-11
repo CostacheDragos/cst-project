@@ -12,6 +12,8 @@ import { CredentialsValidators } from '../../helpers/credentials-validators';
 export class RegisterPageComponent implements OnInit {
 
   registerForm!: FormGroup;
+  successStatusCode = 200;
+  registerIsBeingRequested = false;
 
   constructor(private authenticationService: AuthenticationService, private router: Router) { 
     if(this.authenticationService.isAuthenticated) {
@@ -44,16 +46,16 @@ export class RegisterPageComponent implements OnInit {
       lastName: this.registerForm.value.lastName,
     }
 
+    this.registerIsBeingRequested = true;
     this.authenticationService.register(credentials).then(
       statusCode => {
-        console.log(statusCode);
+        this.registerIsBeingRequested = false;
+        if(statusCode === this.successStatusCode) {
+          console.log("Successful registration");
+          this.navigateToLogin();
+        }
       }
     );
-
-    // If the user has registered successfully, redirect to the main page
-    // if(this.authenticationService.isAuthenticated) {
-    //   this.navigateToMain();
-    // }
   }
 
   navigateToLogin() {
