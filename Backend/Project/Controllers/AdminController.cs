@@ -1,4 +1,5 @@
-﻿using Core.Services;
+﻿using Core.Dtos;
+using Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,7 +17,6 @@ namespace Project.Controllers
             this.userService = userService;
             this.tripService = tripService;
         }
-
 
         /// <summary>
         /// Get all users
@@ -45,6 +45,26 @@ namespace Project.Controllers
             if (result == null) 
                 return NoContent();
             return Ok(result);
+        }
+
+        /// <summary>
+        /// Delete user by id
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
+        [HttpDelete("deleteUser")]
+        [Authorize(Roles = "Admin")]
+        public IActionResult Delete(int userId)
+        {
+            var result = userService.Delete(userId);
+            if (result == true)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
     }
 }

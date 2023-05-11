@@ -1,13 +1,7 @@
 ﻿using Core.Dtos;
-//using DataLayer.Dtos;
 using DataLayer.Entities;
 using DataLayer.Enums;
 using DataLayer;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using DataLayer.Mapping;
 using DataLayer.Dtos;
 
@@ -70,12 +64,19 @@ namespace Core.Services
 
         }
 
-
         public List<UserDto> GetAll()
         {
             var results = unitOfWork.Users.GetAll().ToUserDtos();
 
             return results;
+        }
+        public bool Delete(int userId)
+        {
+            var user = unitOfWork.Users.GetById(userId);
+            if (user == null) return false;
+            unitOfWork.Users.Remove(user);
+            unitOfWork.SaveChanges();
+            return true;
         }
     }
 }
