@@ -32,8 +32,6 @@ namespace Project.Controllers
             ClaimsPrincipal user = User;
 
             var result = tripService.GetById(tripId);
-            if (result == null)
-                return NotFound();
 
             int userId = int.Parse(user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
             if (userId == result.UserId)
@@ -42,7 +40,7 @@ namespace Project.Controllers
             }
             else
             {
-                return Unauthorized();
+                return Forbid();
             }
         }
 

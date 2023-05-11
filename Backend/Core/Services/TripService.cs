@@ -1,4 +1,5 @@
 ﻿using Core.Dtos;
+using Core.Exceptions;
 using DataLayer;
 using DataLayer.Dtos;
 using DataLayer.Entities;
@@ -19,6 +20,8 @@ namespace Core.Services
         public TripListingDTO GetById(int tripId)
         {
             var result = unitOfWork.Trips.GetById(tripId).ToTripListingDTO();
+            if (result == null)
+                throw new ResourceMissingException($"The trip with the id {tripId} does not exist!");
 
             return result;
         }
