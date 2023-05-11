@@ -9,6 +9,8 @@ export class AuthenticationService {
 
   private currentUser: User | null = null;
 
+  private baseURL = 'http://localhost:5000/api/Users';
+
   constructor() { 
     // Check for stored credentials
     const storedData = localStorage.getItem("RememberedUser");
@@ -29,13 +31,25 @@ export class AuthenticationService {
       console.log("Wrong credentials");
   }
 
-  register(credentials: RegisterCredentials) {
-    this.currentUser = {
-      id: '1',
-      email: credentials.email,
-    }
-    // TODO create account using the provided credentials.
-    console.log(this.currentUser);
+  async register(credentials: RegisterCredentials) {
+    const response = await fetch(
+      `${this.baseURL}/register`,
+      {
+        method: "POST",
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email: credentials.email,
+          password: credentials.password,
+          name: credentials.firstName,
+          surname: credentials.lastName,
+        }),
+      }
+    );
+    
+    return response.status;
   }
 
   logout() {

@@ -43,12 +43,17 @@ export class RegisterPageComponent implements OnInit {
       firstName: this.registerForm.value.firstName,
       lastName: this.registerForm.value.lastName,
     }
-    this.authenticationService.register(credentials);
+
+    this.authenticationService.register(credentials).then(
+      statusCode => {
+        console.log(statusCode);
+      }
+    );
 
     // If the user has registered successfully, redirect to the main page
-    if(this.authenticationService.isAuthenticated) {
-      this.navigateToMain();
-    }
+    // if(this.authenticationService.isAuthenticated) {
+    //   this.navigateToMain();
+    // }
   }
 
   navigateToLogin() {
