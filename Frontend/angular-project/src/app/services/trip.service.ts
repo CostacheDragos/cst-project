@@ -8,7 +8,7 @@ import { AuthenticationService } from './authentication.service';
 @Injectable({
   providedIn: 'root',
 })
-//TODO - change with server requests
+
 export class TripService {
   private baseURL = 'http://localhost:5000/api/Trips';
 
@@ -43,25 +43,23 @@ export class TripService {
     const response = await fetch(`${this.baseURL}/getAllForUser`, {
       method: 'GET',
       headers: {
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${this.authService.user?.JWT}`,
+        Accept: 'application/json',
+        Authorization: `Bearer ${this.authService.user?.JWT}`,
       },
     });
 
-    this.listOfTrips = (await response.json()).map(
-      (trip: any) => {
-        return {
-          userID: trip.userId,
-          tripID: trip.tripId,
-          city: trip.name,
-          country: trip.country,
-          date: trip.date,
-          spending: trip.spending,
-          rating: trip.rating,
-          description: "",
-        };
-      }
-    );
+    this.listOfTrips = (await response.json()).map((trip: any) => {
+      return {
+        userID: trip.userId,
+        tripID: trip.tripId,
+        city: trip.name,
+        country: trip.country,
+        date: trip.date,
+        spending: trip.spending,
+        rating: trip.rating,
+        description: '',
+      };
+    });
   }
 
   //get details for given tripId
@@ -88,25 +86,63 @@ export class TripService {
     };
   }
 
-  addNewTrip(newTrip: Trip) {
-    this.listOfTripsData.push(newTrip);
-    this.listOfTripsSubject.next(this.listOfTripsData);
+  //add a new trip into db
+  async addNewTrip(newTrip: Trip) {
+    const response = await fetch(`${this.baseURL}/create`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${this.authService.user?.JWT}`,
+      },
+      body: JSON.stringify({
+        userId: this.authService.user?.id,
+        name: newTrip.city,
+        country: newTrip.country,
+        date: newTrip.date,
+        spending: newTrip.spending,
+        rating: newTrip.rating,
+        description: newTrip.description,
+      }),
+    });
+
+    if (response.status === 200) {
+      console.log('Trip added successfully');
+      this.listOfTrips.push(newTrip);
+      this.listOfTripsSubject.next(this.listOfTrips);
+    }
+  }
+
+  //check if trip exists in db
+  async getTripById(tripId: string): Promise<Trip | null> {
+    const response = await fetch(`${this.baseURL}/getById/?tripId=${tripId}`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${this.authService.user?.JWT}`,
+      },
+    });
+
+    if (response.status === 200) return await response.json();
+    return null;
   }
 
   //main function used for adding/editing a trip
-  updateOrCreateTrip(tripToBeUpdated: Trip) {
-    const existingTrip = this.listOfTripsData.find(
-      (trip) => trip.tripID === tripToBeUpdated.tripID
-    );
-    if (existingTrip !== undefined) {
-      existingTrip.city = tripToBeUpdated.city;
-      existingTrip.country = tripToBeUpdated.country;
-      existingTrip.date = tripToBeUpdated.date;
-      existingTrip.spending = tripToBeUpdated.spending;
-      existingTrip.rating = tripToBeUpdated.rating;
-      existingTrip.description = tripToBeUpdated.description;
-    } else this.addNewTrip(tripToBeUpdated);
-
-    this.listOfTripsSubject.next(this.listOfTrips);
+  async updateOrCreateTrip(tripToBeUpdated: Trip) {
+    if ((await this.getTripById(tripToBeUpdated.tripID)) == null) {
+      this.addNewTrip(tripToBeUpdated);
+    } else {
+    }
+    // const existingTrip = this.listOfTripsData.find(
+    //   (trip) => trip.tripID === tripToBeUpdated.tripID
+    // );
+    // if (existingTrip !== undefined) {
+    //   existingTrip.city = tripToBeUpdated.city;
+    //   existingTrip.country = tripToBeUpdated.country;
+    //   existingTrip.date = tripToBeUpdated.date;
+    //   existingTrip.spending = tripToBeUpdated.spending;
+    //   existingTrip.rating = tripToBeUpdated.rating;
+    //   existingTrip.description = tripToBeUpdated.description;
+    // }
   }
 }
