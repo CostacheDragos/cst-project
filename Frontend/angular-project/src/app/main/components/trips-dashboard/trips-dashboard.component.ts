@@ -29,7 +29,7 @@ export class TripsDashboardComponent {
     );
   }
 
-  ngOnChanges():void{
+  ngOnChanges(): void {
     this.currentPageTrips = this.listOfTrips.slice(
       this.currentPageStartIndex,
       this.pageLength
