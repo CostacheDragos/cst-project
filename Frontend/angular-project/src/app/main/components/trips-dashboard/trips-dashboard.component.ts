@@ -29,6 +29,13 @@ export class TripsDashboardComponent {
     );
   }
 
+  ngOnChanges():void{
+    this.currentPageTrips = this.listOfTrips.slice(
+      this.currentPageStartIndex,
+      this.pageLength
+    );
+  }
+
   //******************************* Pagination methods **********************************
   //////////////////////////////////////////////////////////////////////////////////////
   previous() {

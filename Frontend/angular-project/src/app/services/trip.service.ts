@@ -4,18 +4,21 @@ import { v4 as uuidv4 } from 'uuid';
 import { Subject } from 'rxjs';
 
 import tripsDataJson from './trips.json';
+import { AuthenticationService } from './authentication.service';
 @Injectable({
   providedIn: 'root',
 })
 //TODO - change with server requests
 export class TripService {
-  private listOfTripsData: Trip[] = tripsDataJson;
+  private baseURL = 'http://localhost:5000/api/Trips';
+
+  private listOfTripsData!: Trip[];
   listOfTripsSubject = new Subject<Trip[]>();
 
   private edited: Trip = this.emptyTrip();
   editedTripsubject = new Subject<Trip>();
 
-  constructor() {}
+  constructor(private authService: AuthenticationService) {}
 
   //getter
   get editedTrip() {
@@ -33,6 +36,32 @@ export class TripService {
   set listOfTrips(newListOfTrips: any) {
     this.listOfTripsData = newListOfTrips;
     this.listOfTripsSubject.next(newListOfTrips);
+  }
+
+  //request trips for user from backend
+  async requestTrips() {
+    const response = await fetch(`${this.baseURL}/getAllForUser`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${this.authService.user?.JWT}`,
+      },
+    });
+
+    this.listOfTrips = (await response.json()).map(
+      (trip: any) => {
+        return {
+          userID: trip.userId,
+          tripID: trip.tripId,
+          city: trip.name,
+          country: trip.country,
+          date: trip.date,
+          spending: trip.spending,
+          rating: trip.rating,
+          description: "",
+        };
+      }
+    );
   }
 
   //get details for given tripId
