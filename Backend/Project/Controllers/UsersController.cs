@@ -18,6 +18,11 @@ namespace Project.Controllers
             this.userService = userService;
         }
 
+        /// <summary>
+        /// Register user
+        /// </summary>
+        /// <param name="registerData"></param>
+        /// <returns></returns>
         [HttpPost("register")]
         [AllowAnonymous]
         public IActionResult Register([FromBody] UserRegisterDTO registerData)
@@ -26,10 +31,20 @@ namespace Project.Controllers
             {
                 return BadRequest();
             }
-            userService.Register(registerData);
-            return Ok();
+            var jwtToken = userService.Register(registerData);
+            if (jwtToken == null)
+            {
+                return BadRequest();
+            }
+            return Ok(new {token = jwtToken});
         }
 
+
+        /// <summary>
+        /// Login user
+        /// </summary>
+        /// <param name="payload"></param>
+        /// <returns></returns>
         [HttpPost("login")]
         [AllowAnonymous]
         public IActionResult Login([FromBody] UserLoginDTO payload)

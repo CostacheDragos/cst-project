@@ -4,6 +4,7 @@ using DataLayer.Enums;
 using DataLayer;
 using DataLayer.Mapping;
 using DataLayer.Dtos;
+using System.Data;
 
 namespace Core.Services
 {
@@ -19,11 +20,11 @@ namespace Core.Services
             this.authService = authService;
         }
 
-        public void Register(UserRegisterDTO registerData)
+        public string Register(UserRegisterDTO registerData)
         {
             if (registerData == null)
             {
-                return;
+                return null;
             }
 
             var hashedPassword = authService.HashPassword(registerData.Password);
@@ -39,6 +40,9 @@ namespace Core.Services
 
             unitOfWork.Users.Insert(user);
             unitOfWork.SaveChanges();
+
+            var role = unitOfWork.Roles.GetById(user.RoleId);
+            return authService.GenerateToken(user, role.Name);
         }
 
         public string Validate(UserLoginDTO payload)
@@ -61,7 +65,6 @@ namespace Core.Services
             {
                 return null;
             }
-
         }
 
         public List<UserDto> GetAll()
