@@ -22,52 +22,65 @@ export class AuthenticationService {
   }
 
   async login(credentials: LoginCredentials, rememberMe: boolean) {
-    const response = await fetch(
-      `${this.baseURL}/login`,
-      {
-        method: "POST",
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          ...credentials
-        }),
-      }
-    );
+    try{
+      const response = await fetch(
+        `${this.baseURL}/login`,
+        {
+          method: "POST",
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            ...credentials
+          }),
+        }
+      );
 
-    const token = (await response.json()).token;
-    this.currentUser = this.decodeJWT(token);
+      const token = (await response.json()).token;
+      this.currentUser = this.decodeJWT(token);
 
-    // If the rememberMe option is checked, store user credentials in local storage
-    if(rememberMe)
-      localStorage.setItem("RememberedUser", JSON.stringify(this.currentUser));
+      // If the rememberMe option is checked, store user credentials in local storage
+      if(rememberMe)
+        localStorage.setItem("RememberedUser", JSON.stringify(this.currentUser));
 
-    return response.status;
+      return response.status;
+    } catch(error){
+      console.error(error);
+    }
+
+    return 0;
   }
 
   async register(credentials: RegisterCredentials) {
-    const response = await fetch(
-      `${this.baseURL}/register`,
-      {
-        method: "POST",
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          email: credentials.email,
-          password: credentials.password,
-          name: credentials.firstName,
-          surname: credentials.lastName,
-        }),
-      }
-    );
-    
-    const token = (await response.json()).token;
-    this.currentUser = this.decodeJWT(token);
+    try
+    {
+      const response = await fetch(
+        `${this.baseURL}/register`,
+        {
+          method: "POST",
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: credentials.email,
+            password: credentials.password,
+            name: credentials.firstName,
+            surname: credentials.lastName,
+          }),
+        }
+      );
+      
+      const token = (await response.json()).token;
+      this.currentUser = this.decodeJWT(token);
 
-    return response.status;
+      return response.status;
+    } catch(error){
+      console.error(error);
+    }
+
+    return 0;
   }
 
   logout() {

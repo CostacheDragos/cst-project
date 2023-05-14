@@ -13,6 +13,7 @@ export class LoginPageComponent implements OnInit {
 
   loginForm!: FormGroup;
   successStatusCode = 200;
+  loginIsBeingRequested = false;
 
   constructor(private authenticationService: AuthenticationService, private router: Router) {
     if(this.authenticationService.isAuthenticated) {
@@ -38,8 +39,11 @@ export class LoginPageComponent implements OnInit {
       email: this.loginForm.value.email,
       password: this.loginForm.value.password,
     }
+
+    this.loginIsBeingRequested = true;
     this.authenticationService.login(credentials, this.loginForm.value.rememberMe).then(
       statusCode => {
+        this.loginIsBeingRequested = false;
         // If the user has logged in successfully, redirect to the main page
         if(statusCode === this.successStatusCode)
           this.navigateToMain();
