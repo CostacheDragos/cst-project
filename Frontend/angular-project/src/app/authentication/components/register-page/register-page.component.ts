@@ -52,7 +52,7 @@ export class RegisterPageComponent implements OnInit {
         this.registerIsBeingRequested = false;
         if(statusCode === this.successStatusCode) {
           console.log("Successful registration");
-          this.navigateToLogin();
+          this.navigateToMain();
         }
       }
     );

@@ -64,6 +64,9 @@ export class AuthenticationService {
       }
     );
     
+    const token = (await response.json()).token;
+    this.currentUser = this.decodeJWT(token);
+
     return response.status;
   }
 
