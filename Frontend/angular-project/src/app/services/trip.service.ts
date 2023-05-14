@@ -91,6 +91,7 @@ export class TripService {
 
     if (response.status === 200) {
       console.log('Trip deleted successfully');
+      
       this.listOfTrips.splice(
         this.listOfTrips.findIndex((item) => item.tripID === tripId),
         1
@@ -122,9 +123,21 @@ export class TripService {
     if (response.status === 200) {
       console.log('Trip added successfully');
 
-      //TODO fix this
-      this.listOfTrips.push(newTrip);
+      //get the added trip from backedn in order to add it in list of trips
+      const trip = await response.json();
 
+      const newAddedTrip= {
+        userID: trip.userId,
+        tripID: trip.tripId,
+        city: trip.name,
+        country: trip.country,
+        date: trip.date,
+        spending: trip.spending,
+        rating: trip.rating,
+        description: trip.description,
+      };
+
+      this.listOfTrips.push(newAddedTrip);
       this.listOfTripsSubject.next(this.listOfTrips);
     }
   }

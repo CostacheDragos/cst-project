@@ -11,6 +11,10 @@ export class AddEditValidators {
   }
 
   public static ratingValidator(rating: FormControl): ValidationErrors | null {
+    //check for rating to be an integer and between 0 and 5
+    if (!Number.isInteger(rating?.value)) {
+      return { invalidRating: true };
+    }
     if (rating?.value <= 0) {
       return { invalidRating: true };
     }

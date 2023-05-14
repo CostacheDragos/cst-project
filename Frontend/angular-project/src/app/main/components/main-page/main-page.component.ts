@@ -24,6 +24,7 @@ export class MainPageComponent {
   }
 
   ngOnInit(): void {
+    //request list of trips 
     this.tripService.requestTrips();
   }
 
