@@ -101,8 +101,8 @@
           <div class="red-text" *ngIf="spending?.errors?.['required']">
             Spending is required!
           </div>
-          <div class="red-text" *ngIf="spending?.errors?.['spendingMin']">
-            Spending must be a number greater that 0!
+          <div class="red-text" *ngIf="spending?.errors?.['invalidSpending']">
+            Spending must be an integer number greater that 0!
           </div>
         </nz-form-control>
       </nz-form-item>

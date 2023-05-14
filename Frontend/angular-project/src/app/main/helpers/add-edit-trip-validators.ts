@@ -4,8 +4,11 @@ export class AddEditValidators {
   public static spendingValidator(
     spending: FormControl
   ): ValidationErrors | null {
+    if (!Number.isInteger(spending?.value)) {
+      return { invalidSpending: true };
+    }
     if (spending?.value <= 0) {
-      return { spendingMin: true };
+      return { invalidSpending: true };
     }
     return null;
   }
