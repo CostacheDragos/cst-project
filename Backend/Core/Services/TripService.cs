@@ -38,9 +38,9 @@ namespace Core.Services
             return result;
         }
 
-        public bool Create(TripCreationDTO tripCreationDTO)
+        public TripListingDTO Create(TripCreationDTO tripCreationDTO)
         {
-            if (tripCreationDTO == null) return false;
+            if (tripCreationDTO == null) return null;
 
             var trip = new Trip {
                 UserId = tripCreationDTO.UserId,
@@ -56,7 +56,11 @@ namespace Core.Services
             unitOfWork.Trips.Insert(trip);
             unitOfWork.SaveChanges();
 
-            return true;
+            // We want to return the whole trip back to the client
+            // so we need to map it to a DTO
+            var result = trip.ToTripListingDTO();
+
+            return result;
         }
 
         public bool Delete(int tripId)

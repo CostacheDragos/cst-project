@@ -71,10 +71,17 @@ namespace Project.Controllers
         [Authorize(Roles = "User")]
         public IActionResult Create([FromBody] TripCreationDTO tripCreationDTO)
         {
-            var result = tripService.Create(tripCreationDTO);
-            if (result == true)
+            ClaimsPrincipal user = User;
+            int userId = int.Parse(user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value);
+            if (tripCreationDTO.UserId != userId)
             {
-                return Ok();
+                return Forbid();
+            }
+
+            var result = tripService.Create(tripCreationDTO);
+            if (result != null)
+            {
+                return Ok(result);
             }
             else
             {
