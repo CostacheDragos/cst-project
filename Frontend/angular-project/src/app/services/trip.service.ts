@@ -4,18 +4,20 @@ import { v4 as uuidv4 } from 'uuid';
 import { Subject } from 'rxjs';
 
 import tripsDataJson from './trips.json';
+import { AuthenticationService } from './authentication.service';
 @Injectable({
   providedIn: 'root',
 })
-//TODO - change with server requests
 export class TripService {
-  private listOfTripsData: Trip[] = tripsDataJson;
+  private baseURL = 'http://localhost:5000/api/Trips';
+
+  private listOfTripsData!: Trip[];
   listOfTripsSubject = new Subject<Trip[]>();
 
   private edited: Trip = this.emptyTrip();
   editedTripsubject = new Subject<Trip>();
 
-  constructor() {}
+  constructor(private authService: AuthenticationService) {}
 
   //getter
   get editedTrip() {
@@ -35,16 +37,6 @@ export class TripService {
     this.listOfTripsSubject.next(newListOfTrips);
   }
 
-  //get details for given tripId
-  getDetailsForTripId(tripId: string) {
-    return this.listOfTripsData.find((trip) => trip.tripID === tripId);
-  }
-
-  //delete trip
-  deleteTrip(tripId: string) {
-    console.log('Trip with id ' + tripId + ' has been deleted');
-  }
-
   //empty trip
   emptyTrip(): any {
     return {
@@ -59,25 +51,166 @@ export class TripService {
     };
   }
 
-  addNewTrip(newTrip: Trip) {
-    this.listOfTripsData.push(newTrip);
-    this.listOfTripsSubject.next(this.listOfTripsData);
+  //request trips for user from backend
+  async requestTrips() {
+    const response = await fetch(`${this.baseURL}/getAllForUser`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${this.authService.user?.JWT}`,
+      },
+    });
+
+    this.listOfTrips = (await response.json()).map((trip: any) => {
+      return {
+        userID: trip.userId,
+        tripID: trip.tripId,
+        city: trip.name,
+        country: trip.country,
+        date: trip.date,
+        spending: trip.spending,
+        rating: trip.rating,
+        description: '',
+      };
+    });
+  }
+
+  //delete trip from db
+  async deleteTrip(tripId: string) {
+    const response = await fetch(`${this.baseURL}/delete`, {
+      method: 'DELETE',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${this.authService.user?.JWT}`,
+      },
+      body: JSON.stringify({
+        tripId: tripId,
+      }),
+    });
+
+    if (response.status === 200) {
+      console.log('Trip deleted successfully');
+      
+      this.listOfTrips.splice(
+        this.listOfTrips.findIndex((item) => item.tripID === tripId),
+        1
+      );
+      this.listOfTripsSubject.next(this.listOfTrips);
+    }
+  }
+
+  //add a new trip into db
+  async addNewTrip(newTrip: Trip) {
+    const response = await fetch(`${this.baseURL}/create`, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${this.authService.user?.JWT}`,
+      },
+      body: JSON.stringify({
+        userId: this.authService.user?.id,
+        name: newTrip.city,
+        country: newTrip.country,
+        date: newTrip.date,
+        spending: newTrip.spending,
+        rating: newTrip.rating,
+        description: newTrip.description,
+      }),
+    });
+
+    if (response.status === 200) {
+      console.log('Trip added successfully');
+
+      //get the added trip from backedn in order to add it in list of trips
+      const trip = await response.json();
+
+      const newAddedTrip= {
+        userID: trip.userId,
+        tripID: trip.tripId,
+        city: trip.name,
+        country: trip.country,
+        date: trip.date,
+        spending: trip.spending,
+        rating: trip.rating,
+        description: trip.description,
+      };
+
+      this.listOfTrips.push(newAddedTrip);
+      this.listOfTripsSubject.next(this.listOfTrips);
+    }
+  }
+
+  //update trip in db
+  async updateTrip(editedTrip: Trip) {
+    const response = await fetch(`${this.baseURL}/edit`, {
+      method: 'PUT',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${this.authService.user?.JWT}`,
+      },
+      body: JSON.stringify({
+        tripId: editedTrip.tripID,
+        userId: this.authService.user?.id,
+        name: editedTrip.city,
+        country: editedTrip.country,
+        date: editedTrip.date,
+        spending: editedTrip.spending,
+        rating: editedTrip.rating,
+        description: editedTrip.description,
+      }),
+    });
+
+    if (response.status === 200) {
+      console.log('Trip updated successfully');
+
+      this.listOfTrips.splice(
+        this.listOfTrips.findIndex((item) => item.tripID === editedTrip.tripID),
+        1,
+        editedTrip
+      );
+
+      this.listOfTripsSubject.next(this.listOfTrips);
+    }
+  }
+
+  //get trip by id
+  async getTripById(tripId: string): Promise<Trip | null> {
+    const response = await fetch(`${this.baseURL}/getById/?tripId=${tripId}`, {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        Authorization: `Bearer ${this.authService.user?.JWT}`,
+      },
+    });
+
+    if (response.status === 200) {
+      const trip = await response.json();
+
+      return {
+        userID: trip.userId,
+        tripID: trip.tripId,
+        city: trip.name,
+        country: trip.country,
+        date: trip.date,
+        spending: trip.spending,
+        rating: trip.rating,
+        description: trip.description,
+      };
+    }
+    return null;
   }
 
   //main function used for adding/editing a trip
-  updateOrCreateTrip(tripToBeUpdated: Trip) {
-    const existingTrip = this.listOfTripsData.find(
-      (trip) => trip.tripID === tripToBeUpdated.tripID
-    );
-    if (existingTrip !== undefined) {
-      existingTrip.city = tripToBeUpdated.city;
-      existingTrip.country = tripToBeUpdated.country;
-      existingTrip.date = tripToBeUpdated.date;
-      existingTrip.spending = tripToBeUpdated.spending;
-      existingTrip.rating = tripToBeUpdated.rating;
-      existingTrip.description = tripToBeUpdated.description;
-    } else this.addNewTrip(tripToBeUpdated);
-
-    this.listOfTripsSubject.next(this.listOfTrips);
+  async updateOrCreateTrip(tripToBeUpdated: Trip) {
+    //if trip doesn't exist, we add it into database
+    if ((await this.getTripById(tripToBeUpdated.tripID)) == null) {
+      this.addNewTrip(tripToBeUpdated);
+    } else {
+      //else, we update it
+      this.updateTrip(tripToBeUpdated);
+    }
   }
 }

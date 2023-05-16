@@ -14,7 +14,7 @@ export class TripCardComponent {
   tripListing!: Trip;
 
   //contains all data, including description
-  trip?: Trip;
+  trip?: Trip | null;
 
   @Output()
   emitDeleteTripId: EventEmitter<string> = new EventEmitter();
@@ -33,11 +33,11 @@ export class TripCardComponent {
     this.emitDeleteTripId.emit(tripId);
   }
 
-  onViewDetailsClick(tripId: string) {
+  async onViewDetailsClick(tripId: string) {
     //get the trip with all data from server
-    this.trip = this.tripService.getDetailsForTripId(tripId);
+    this.trip = await this.tripService.getTripById(tripId);
 
-    if (this.trip != undefined) {
+    if (this.trip != null) {
       //asign this value to editedTrip from servce
       this.tripService.editedTrip = this.trip;
 

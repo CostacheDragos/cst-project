@@ -12,6 +12,8 @@ import { CredentialsValidators } from '../../helpers/credentials-validators';
 export class LoginPageComponent implements OnInit {
 
   loginForm!: FormGroup;
+  successStatusCode = 200;
+  loginIsBeingRequested = false;
 
   constructor(private authenticationService: AuthenticationService, private router: Router) {
     if(this.authenticationService.isAuthenticated) {
@@ -37,16 +39,16 @@ export class LoginPageComponent implements OnInit {
       email: this.loginForm.value.email,
       password: this.loginForm.value.password,
     }
-    this.authenticationService.login(credentials);
 
-    // If the user has logged in successfully, redirect to the main page
-    if(this.authenticationService.isAuthenticated) {
-      // If the rememberMe option is checked, store user credentials in local storage
-      if(this.loginForm.value.rememberMe)
-        localStorage.setItem("RememberedUser", JSON.stringify(this.authenticationService.user));
-
-      this.navigateToMain();
-    }
+    this.loginIsBeingRequested = true;
+    this.authenticationService.login(credentials, this.loginForm.value.rememberMe).then(
+      statusCode => {
+        this.loginIsBeingRequested = false;
+        // If the user has logged in successfully, redirect to the main page
+        if(statusCode === this.successStatusCode)
+          this.navigateToMain();
+      }
+    );
   }
 
   navigateToRegister() {

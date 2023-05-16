@@ -88,7 +88,10 @@
                 </nz-form-control>
             </nz-form-item>
         </div>
-        <button nz-button class="register-form-button" [nzType]="'primary'" [disabled]="!registerForm.valid">Register</button>
-        <a class="login-navigator" (click)="navigateToLogin()">Log in!</a>
+        <div *ngIf="!registerIsBeingRequested">
+            <button nz-button class="register-form-button" [nzType]="'primary'" [disabled]="!registerForm.valid">Register</button>
+            <a class="login-navigator" (click)="navigateToLogin()">Log in!</a>
+        </div>
+        <nz-spin *ngIf="registerIsBeingRequested" nzSimple [nzSize]="'large'"></nz-spin>
     </form>
 </div>

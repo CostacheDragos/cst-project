@@ -10,7 +10,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./main-page.component.scss'],
 })
 export class MainPageComponent {
-  listOfTrips!: Trip[];
+  listOfTrips: Trip[] = [];
 
   constructor(
     private tripService: TripService,
@@ -24,7 +24,8 @@ export class MainPageComponent {
   }
 
   ngOnInit(): void {
-    this.listOfTrips = this.tripService.listOfTrips;
+    //request list of trips 
+    this.tripService.requestTrips();
   }
 
   logout() {

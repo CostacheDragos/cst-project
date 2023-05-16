@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { User } from '../interfaces/user.interface';
 import { LoginCredentials } from '../authentication/interfaces/login-credentials.interface';
 import { RegisterCredentials } from '../authentication/interfaces/register-credentials.interface';
+import jwtDecode from 'jwt-decode';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -9,33 +11,76 @@ export class AuthenticationService {
 
   private currentUser: User | null = null;
 
+  private baseURL = 'http://localhost:5000/api/Users';
+
   constructor() { 
     // Check for stored credentials
     const storedData = localStorage.getItem("RememberedUser");
-    if(storedData)
+    if(storedData){
       this.currentUser = JSON.parse(storedData);
+    }
   }
 
-  login(credentials: LoginCredentials) {
-    if(credentials.email === 'test@test.com' && credentials.password === 'password'){
-      this.currentUser = {
-        id: '1',
-        email: 'test@test.com',
-      }
+  async login(credentials: LoginCredentials, rememberMe: boolean) {
+    try{
+      const response = await fetch(
+        `${this.baseURL}/login`,
+        {
+          method: "POST",
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            ...credentials
+          }),
+        }
+      );
+
+      const token = (await response.json()).token;
+      this.currentUser = this.decodeJWT(token);
+
+      // If the rememberMe option is checked, store user credentials in local storage
+      if(rememberMe)
+        localStorage.setItem("RememberedUser", JSON.stringify(this.currentUser));
+
+      return response.status;
+    } catch(error){
+      console.error(error);
+    }
+
+    return 0;
+  }
+
+  async register(credentials: RegisterCredentials) {
+    try
+    {
+      const response = await fetch(
+        `${this.baseURL}/register`,
+        {
+          method: "POST",
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            email: credentials.email,
+            password: credentials.password,
+            name: credentials.firstName,
+            surname: credentials.lastName,
+          }),
+        }
+      );
       
-      console.log(this.currentUser);
-    }
-    else
-      console.log("Wrong credentials");
-  }
+      const token = (await response.json()).token;
+      this.currentUser = this.decodeJWT(token);
 
-  register(credentials: RegisterCredentials) {
-    this.currentUser = {
-      id: '1',
-      email: credentials.email,
+      return response.status;
+    } catch(error){
+      console.error(error);
     }
-    // TODO create account using the provided credentials.
-    console.log(this.currentUser);
+
+    return 0;
   }
 
   logout() {
@@ -50,5 +95,15 @@ export class AuthenticationService {
   }
   get isAuthenticated() : boolean {
     return this.currentUser ? true : false;
+  }
+
+
+  decodeJWT(token: string) : User | null {
+    const decoded = jwtDecode<any>(token);
+    return {
+      id: decoded.nameid,
+      email: decoded.name,
+      JWT: token,
+    };
   }
 }
